@@ -10,86 +10,35 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useLogout } from '@/hooks/useLogout';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useCurrentUser } from '@/redux/features/auth/authSlice';
-import { useGetMyProfileQuery } from '@/redux/features/getUser/getUserMeApi';
-import { useAppSelector } from '@/redux/hooks';
 import { ChevronDown, LogOut } from 'lucide-react';
 
 export default function UserDropdown() {
-  const currentUser = useAppSelector(useCurrentUser);
   const logout = useLogout();
-
-  // Fetch real-time profile info from the server (/users/me)
-  const { data: profileResponse, isLoading } = useGetMyProfileQuery(undefined, {
-    skip: !currentUser,
-  });
 
   const handleLogout = () => {
     logout();
   };
-
-  // Merge currentUser (session data) and profileResponse (detailed DB profile data)
-  const profile = profileResponse?.data || currentUser;
-
-  const avatarUrl = profile?.avatarUrl || profile?.profilePicture;
-  const fullName =
-    profile?.fullName ||
-    (profile?.firstName && profile?.lastName ? `${profile.firstName} ${profile.lastName}` : '');
-  const email = profile?.email;
-
-  const roleDisplay = (() => {
-    const role = profile?.role || profile?.roles?.[0];
-    if (!role) return '';
-    return role
-      .split('_')
-      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-  })();
-
-  // Render Skeleton Loader during hydration or initial load if profile data is missing
-  if (isLoading && !fullName) {
-    return (
-      <div className="flex items-center gap-3 rounded-md border-white/5 md:border md:bg-[#0F1A2C] md:px-3 md:py-1.5">
-        <Skeleton className="size-10 rounded-full bg-white/10 md:size-9" />
-        <div className="hidden flex-col items-start gap-1.5 md:flex">
-          <Skeleton className="h-3.5 w-20 rounded bg-white/10" />
-          <Skeleton className="h-2.5 w-14 rounded bg-white/10" />
-        </div>
-        <ChevronDown className="text-gray/30 hidden h-4 w-4 animate-pulse md:block" />
-      </div>
-    );
-  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="group flex cursor-pointer items-center gap-3 rounded-md border-white/5 outline-0! transition-all duration-300 hover:bg-[#111B33]/80 md:border md:bg-[#0F1A2C] md:px-3 md:py-1.5">
           <Avatar className="size-10 border transition-all duration-300 md:size-9">
-            {avatarUrl && (
-              <AvatarImage
-                src={avatarUrl}
-                alt={fullName || 'User Avatar'}
-                className="object-cover"
-              />
-            )}
-            <AvatarFallback className="bg-primary text-xs font-semibold text-white">
-              {fullName ? fullName.substring(0, 2).toUpperCase() : 'U'}
-            </AvatarFallback>
+            <AvatarImage
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+              alt="User Avatar"
+              className="object-cover"
+            />
+            <AvatarFallback className="bg-primary text-xs font-semibold text-white">U</AvatarFallback>
           </Avatar>
 
           <div className="hidden flex-col items-start md:flex">
-            <span className="text-sm leading-none font-semibold text-white">
-              {fullName || 'User'}
-            </span>
-            <span className="text-gray mt-1 text-[10px] font-semibold tracking-widest uppercase">
-              {roleDisplay}
-            </span>
+            <span className="text-sm leading-none font-semibold text-white">User</span>
+            <span className="text-gray mt-1 text-[10px] font-semibold tracking-widest uppercase">User</span>
           </div>
           <ChevronDown className="text-gray hidden h-4 w-4 md:block" />
         </button>
       </DropdownMenuTrigger>
-      {/* Dropdown Menu Content */}
       <DropdownMenuContent
         className="rounded-ms animate-in fade-in zoom-in-95 z-100 w-64 border-white/10 bg-[#0F1A2C] p-2 shadow-xl backdrop-blur-xl duration-200"
         align="end"
@@ -99,7 +48,7 @@ export default function UserDropdown() {
           <p className="text-gray text-xs font-semibold tracking-[0.2em] uppercase">
             Manage Profile
           </p>
-          <p className="text-gray mt-0.5 text-sm">{email || currentUser?.email}</p>
+          <p className="text-gray mt-0.5 text-sm">user@gearup.com</p>
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator className="bg-white/5" />

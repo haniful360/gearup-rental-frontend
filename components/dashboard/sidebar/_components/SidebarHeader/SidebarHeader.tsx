@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { SidebarHeader, useSidebar } from '@/components/ui/sidebar';

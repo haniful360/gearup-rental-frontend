@@ -7,11 +7,11 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useModal } from '@/context/ModalContext';
 import { ArrowRight, Bell, BookOpen, ChevronDown, ClipboardList, Trophy, X } from 'lucide-react';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
+
 
 const UserDropdown = dynamic(() => import('./UserDropdown/UserDropdown'), {
   ssr: false,
@@ -67,8 +67,8 @@ const notificationsData = [
 ];
 
 function RightSection({ role }: { role: RoleTypes }) {
-  const { openModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
+  const [showNewAlert, setShowNewAlert] = useState(false);
 
   return (
     <div className="flex items-center gap-3">
@@ -80,7 +80,6 @@ function RightSection({ role }: { role: RoleTypes }) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="mt-2 w-100 overflow-hidden rounded-md border border-[#1E293B] bg-[#111827] p-0 shadow-xl">
-          {/* Header */}
           <div className="flex items-center justify-between border-b border-[#1E293B] p-4">
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-semibold text-white">Notifications</h2>
@@ -101,7 +100,6 @@ function RightSection({ role }: { role: RoleTypes }) {
             </div>
           </div>
 
-          {/* Tabs */}
           <div className="flex gap-4 p-4">
             <span className="bg-primary cursor-pointer rounded-full px-4 py-1.5 text-xs font-medium text-white">
               All
@@ -114,7 +112,6 @@ function RightSection({ role }: { role: RoleTypes }) {
             </span>
           </div>
 
-          {/* List */}
           <div className="max-h-100 overflow-y-auto">
             {notificationsData.map((item) => (
               <div
@@ -152,9 +149,12 @@ function RightSection({ role }: { role: RoleTypes }) {
           className="h-10!"
           label="New Alert"
           showIcon
-          onClick={() => openModal({ view: 'NEW_ALERT', title: 'New Alert' })}
+          onClick={() => setShowNewAlert(true)}
         />
       )}
+
+
+
       <UserDropdown />
     </div>
   );
