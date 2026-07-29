@@ -8,7 +8,6 @@ import SidebarHeaderSection from './_components/SidebarHeader/SidebarHeader';
 import { RoleTypes } from './sidebarRoutes';
 import { Sidebar } from '@/components/ui/sidebar';
 
-
 export function AppSidebar({
   role = 'ADMIN',
   ...props
@@ -17,7 +16,7 @@ export function AppSidebar({
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeaderSection role={role} />
       <SidebarContentSection role={role} />
-      <SidebarFooterSection role={role} />
+      <SidebarFooterSection />
     </Sidebar>
   );
 }

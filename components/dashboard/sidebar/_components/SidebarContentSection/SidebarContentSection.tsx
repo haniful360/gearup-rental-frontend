@@ -5,6 +5,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarGroup,
+  SidebarGroupLabel,
   useSidebar,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
@@ -15,6 +17,12 @@ import {
   providerRoutes,
   adminRoutes,
 } from '../../sidebarRoutes';
+
+const groupLabels: Record<RoleTypes, string> = {
+  CUSTOMER: 'Main Menu',
+  PROVIDER: 'Management',
+  ADMIN: 'Administration',
+};
 
 function SidebarContentSection({ role }: { role: RoleTypes }) {
   const pathname = usePathname();
@@ -29,38 +37,50 @@ function SidebarContentSection({ role }: { role: RoleTypes }) {
   const menuItems = roleBaseRoutes[role] || [];
 
   return (
-    <SidebarContent className={`${state === 'expanded' ? 'px-4' : 'ps-4'} no-scrollbar pt-5`}>
-      <SidebarMenu className="gap-2.5">
-        {menuItems.map((item) => {
-          const isActive = pathname === item?.url;
-          const Icon = item?.icon;
+    <SidebarContent className="px-3 pt-4 no-scrollbar">
+      <SidebarGroup>
+        {state === 'expanded' && (
+          <SidebarGroupLabel className="px-2 text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/50">
+            {groupLabels[role]}
+          </SidebarGroupLabel>
+        )}
+        <SidebarMenu className="mt-1 gap-1">
+          {menuItems.map((item) => {
+            const isActive = pathname === item?.url;
+            const Icon = item?.icon;
 
-          return (
-            <SidebarMenuItem key={item?.title}>
-              <SidebarMenuButton
-                isActive={isActive}
-                tooltip={state === 'collapsed' ? item?.title : undefined}
-                className="gap-3.5 px-5 py-6 font-medium transition-all duration-200"
-                render={<Link href={item?.url} />}
-              >
-                <span
-                  onClick={() => isMobile && setOpenMobile(false)}
-                  className={`flex items-center gap-3.5 font-medium transition-all duration-300 ${
-                    isActive
-                      ? 'text-sidebar-primary! bg-sidebar-accent!'
-                      : 'text-sidebar-foreground! hover:text-sidebar-primary! hover:bg-sidebar-accent/40!'
-                  }`}
+            return (
+              <SidebarMenuItem key={item?.title}>
+                <SidebarMenuButton
+                  isActive={isActive}
+                  tooltip={state === 'collapsed' ? item?.title : undefined}
+                  className="gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200"
+                  render={<Link href={item?.url} />}
                 >
-                  {Icon && <Icon />}
-                  <span className={`${state === 'collapsed' ? 'hidden' : 'block'}`}>
-                    {item?.title}
+                  <span
+                    onClick={() => isMobile && setOpenMobile(false)}
+                    className={`flex items-center gap-3 w-full transition-all duration-200 ${
+                      isActive
+                        ? 'text-sidebar-primary!'
+                        : 'text-sidebar-foreground/70! hover:text-sidebar-foreground!'
+                    }`}
+                  >
+                    <span className={`flex items-center justify-center ${isActive ? 'scale-110' : ''}`}>
+                      {Icon && <Icon className={`h-4 w-4 ${isActive ? 'text-sidebar-primary' : ''}`} />}
+                    </span>
+                    <span className={`${state === 'collapsed' ? 'hidden' : 'block'}`}>
+                      {item?.title}
+                    </span>
+                    {isActive && state === 'expanded' && (
+                      <span className="ml-auto h-1.5 w-1.5 rounded-full bg-sidebar-primary" />
+                    )}
                   </span>
-                </span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          );
-        })}
-      </SidebarMenu>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
+      </SidebarGroup>
     </SidebarContent>
   );
 }
