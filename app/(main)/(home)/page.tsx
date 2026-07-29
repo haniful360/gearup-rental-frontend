@@ -1,7 +1,7 @@
 // app/(main)/(home)/page.tsx
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Compass, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, Compass, Zap } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -23,7 +23,6 @@ export default function HomePage() {
             <Button
               size="lg"
               className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
-              asChild
             >
               <Link href="/gear">
                 Browse All Gear <ArrowRight className="h-4 w-4" />
@@ -33,7 +32,6 @@ export default function HomePage() {
               size="lg"
               variant="outline"
               className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
-              asChild
             >
               <Link href="/auth/register">List Your Gear</Link>
             </Button>
@@ -52,7 +50,7 @@ export default function HomePage() {
               Find gear tailored for your next adventure
             </p>
           </div>
-          <Button variant="ghost" asChild>
+          <Button variant="ghost">
             <Link href="/gear" className="gap-1 text-emerald-600">
               View all <Compass className="h-4 w-4" />
             </Link>
