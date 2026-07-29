@@ -1,16 +1,9 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -32,10 +25,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { useClickAway } from "@/hooks/use-click-away";
 
 export function Navbar() {
   const isLoggedIn = true;
   const userRole: "CUSTOMER" | "PROVIDER" | "ADMIN" = "CUSTOMER";
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useClickAway(menuRef, () => setMenuOpen(false));
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -109,30 +107,27 @@ export function Navbar() {
                 </Link>
               </Button>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="relative h-9 w-9 rounded-full ring-2 ring-emerald-500/20"
-                  >
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage
-                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
-                        alt="User Avatar"
-                      />
-                      <AvatarFallback className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
-                        GU
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end">
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        Alex Morgan
-                      </p>
-                      <p className="text-xs leading-none text-muted-foreground">
+              <div ref={menuRef} className="relative">
+                <button
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  className="relative h-9 w-9 rounded-full ring-2 ring-emerald-500/20 hover:ring-emerald-500/40 transition-all cursor-pointer"
+                >
+                  <Avatar className="h-9 w-9">
+                    <AvatarImage
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+                      alt="User Avatar"
+                    />
+                    <AvatarFallback className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
+                      GU
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+
+                {menuOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border bg-popover p-1 shadow-lg z-50">
+                    <div className="px-2 py-1.5">
+                      <p className="text-sm font-medium leading-none">Alex Morgan</p>
+                      <p className="text-xs leading-none text-muted-foreground mt-1">
                         alex@gearup.com
                       </p>
                       <div className="mt-1.5">
@@ -144,44 +139,44 @@ export function Navbar() {
                         </Badge>
                       </div>
                     </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer p-0">
+                    <div className="my-1 h-px bg-border" />
                     <Link
                       href={`/dashboard/${userRole.toLowerCase()}`}
-                      className="flex w-full items-center px-2 py-1.5"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors"
                     >
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      <LayoutDashboard className="h-4 w-4" />
                       Dashboard
                     </Link>
-                  </DropdownMenuItem>
-                  {userRole === "CUSTOMER" && (
-                    <DropdownMenuItem className="cursor-pointer p-0">
+                    {userRole === "CUSTOMER" && (
                       <Link
                         href="/dashboard/customer"
-                        className="flex w-full items-center px-2 py-1.5"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors"
                       >
-                        <ShoppingBag className="mr-2 h-4 w-4" />
+                        <ShoppingBag className="h-4 w-4" />
                         My Rentals
                       </Link>
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem className="cursor-pointer p-0">
+                    )}
                     <Link
                       href="/profile"
-                      className="flex w-full items-center px-2 py-1.5"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors"
                     >
-                      <User className="mr-2 h-4 w-4" />
+                      <User className="h-4 w-4" />
                       Profile Settings
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-rose-600 focus:bg-rose-50 dark:focus:bg-rose-950 cursor-pointer">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <div className="my-1 h-px bg-border" />
+                    <button
+                      onClick={() => setMenuOpen(false)}
+                      className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 transition-colors cursor-pointer"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Log out
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <div className="flex items-center gap-2">
