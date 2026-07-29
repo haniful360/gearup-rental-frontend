@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
-import { Eye, EyeOff } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
+"use client";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { Eye, EyeOff } from "lucide-react";
+import { useRef, useState } from "react";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
 
 interface InputFieldProps<T extends FieldValues> {
   label: string;
@@ -23,7 +24,7 @@ const InputField = <T extends FieldValues>({
   label,
   name,
   control,
-  type = 'text',
+  type = "text",
   placeholder,
   error,
   required = false,
@@ -37,14 +38,14 @@ const InputField = <T extends FieldValues>({
     field: { onChange, onBlur, value, ref: controllerRef },
   } = useController({ name, control });
 
-  const isPassword = type === 'password';
-  const isDate = type === 'date' || type === 'datetime-local';
-  const inputType = isPassword && showPassword ? 'text' : type;
+  const isPassword = type === "password";
+  const isDate = type === "date" || type === "datetime-local";
+  const inputType = isPassword && showPassword ? "text" : type;
 
   return (
-    <div className="space-y-2">
-      <Label className="block text-xs font-medium text-[#9CA3AF]">
-        {label} {required && <span className="text-error">*</span>}
+    <div className="space-y-1.5">
+      <Label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+        {label} {required && <span className="text-rose-500">*</span>}
       </Label>
 
       <div className="relative">
@@ -54,24 +55,24 @@ const InputField = <T extends FieldValues>({
           readOnly={readOnly}
           onChange={onChange}
           onBlur={onBlur}
-          value={(value as any) ?? ''}
+          value={(value as any) ?? ""}
           ref={(e) => {
             controllerRef(e);
             inputRef.current = e;
           }}
           onClick={() => !readOnly && isDate && inputRef.current?.showPicker()}
           className={cn(
-            'h-auto w-full resize-none rounded-md p-3 shadow-none transition-all duration-300',
-            'placeholder:text-gray/80 border',
-            'focus-visible:border-primary/60 focus-visible:ring-0 focus-visible:ring-offset-0',
-            'text-white',
+            "h-11 w-full rounded-lg px-3.5 text-sm transition-all duration-200",
+            "placeholder:text-zinc-400 dark:placeholder:text-zinc-500",
+            "bg-zinc-50 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800",
+            "text-zinc-900 dark:text-zinc-100",
+            "focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/20 focus-visible:ring-offset-0",
             {
-              'focus-visible:border-primary/60 cursor-default border-0 bg-[#0E182B] opacity-60':
+              "cursor-not-allowed bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 opacity-70":
                 readOnly,
-              'bg-[#0E182B]': !readOnly,
-              'border-error focus-visible:border-error': error,
-              'border-primary/10': !error,
-              'cursor-pointer': !readOnly && isDate,
+              "border-rose-500 focus-visible:border-rose-500 focus-visible:ring-rose-500/20":
+                error,
+              "cursor-pointer": !readOnly && isDate,
             },
             className,
           )}
@@ -81,15 +82,23 @@ const InputField = <T extends FieldValues>({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="text-primary hover:text-primary/80 absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer transition-colors focus:outline-none"
+            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors focus:outline-none"
             tabIndex={-1}
           >
-            {showPassword ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+            {showPassword ? (
+              <Eye className="h-4 w-4" />
+            ) : (
+              <EyeOff className="h-4 w-4" />
+            )}
           </button>
         )}
       </div>
 
-      {error && <p className="text-error text-xs font-medium">{error}</p>}
+      {error && (
+        <p className="text-rose-500 text-xs font-medium tracking-tight">
+          {typeof error === "string" ? error : error?.message}
+        </p>
+      )}
     </div>
   );
 };

@@ -1,12 +1,31 @@
 'use client'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Dumbbell, ShieldCheck, ArrowRight } from "lucide-react";
+import { useForm } from "react-hook-form";
+import InputField from "@/components/dashboard/Fields/InputField/InputField";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
+
+interface LoginForm {
+  email: string;
+  password: string;
+}
 
 export default function LoginPage() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({
+    defaultValues: { email: "", password: "" },
+  });
+
+  const onSubmit = (data: LoginForm) => {
+    console.log(data);
+  };
+
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       {/* Left Form Section */}
@@ -42,36 +61,26 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="alex@example.com"
-                required
-                className="focus-visible:ring-emerald-500"
-              />
-            </div>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <InputField
+              label="Email address"
+              name="email"
+              control={control}
+              type="email"
+              placeholder="alex@example.com"
+              required
+              error={errors.email?.message}
+            />
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="#"
-                  className="text-xs text-emerald-600 hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                required
-                className="focus-visible:ring-emerald-500"
-              />
-            </div>
+            <InputField
+              label="Password"
+              name="password"
+              control={control}
+              type="password"
+              placeholder="••••••••"
+              required
+              error={errors.password?.message}
+            />
 
             <div className="flex items-center space-x-2">
               <Checkbox id="remember" />
@@ -83,12 +92,14 @@ export default function LoginPage() {
               </Label>
             </div>
 
-            <Button
+            <DynamicActionButton
               type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              Sign in to GearUp <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+              label="Sign in to GearUp"
+              className="h-11! w-full"
+              icon={ArrowRight}
+              // isLoading={isLoading}
+              // disabled={isLoading}
+            />
           </form>
 
           <div className="relative my-4">

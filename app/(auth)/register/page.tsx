@@ -1,11 +1,42 @@
-'use client'
+/* eslint-disable react-hooks/incompatible-library */
+"use client";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dumbbell, UserCheck, Store, ShieldCheck } from "lucide-react";
+import {
+  Dumbbell,
+  UserCheck,
+  Store,
+  ShieldCheck,
+  ArrowRight,
+} from "lucide-react";
+import { useForm } from "react-hook-form";
+import InputField from "@/components/dashboard/Fields/InputField/InputField";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
+
+interface RegisterForm {
+  name: string;
+  email: string;
+  password: string;
+  role: "CUSTOMER" | "PROVIDER";
+}
 
 export default function RegisterPage() {
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<RegisterForm>({
+    defaultValues: { name: "", email: "", password: "", role: "CUSTOMER" },
+  });
+
+  const selectedRole = watch("role");
+
+  const onSubmit = (data: RegisterForm) => {
+    console.log(data);
+  };
+
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       {/* Left Hero Visual Banner */}
@@ -61,17 +92,22 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             {/* Role Selection Selector */}
             <div className="space-y-2">
               <Label>I want to</Label>
               <div className="grid grid-cols-2 gap-3">
-                <label className="flex flex-col items-center justify-between rounded-xl border-2 border-emerald-600 bg-emerald-50/30 p-4 hover:bg-emerald-50 cursor-pointer text-center">
+                <label
+                  className={`flex flex-col items-center justify-between rounded-xl border-2 p-4 cursor-pointer text-center transition-colors ${
+                    selectedRole === "CUSTOMER"
+                      ? "border-emerald-600 bg-emerald-50/30"
+                      : "border-zinc-200 hover:border-emerald-600"
+                  }`}
+                >
                   <input
                     type="radio"
-                    name="role"
                     value="CUSTOMER"
-                    defaultChecked
+                    {...register("role")}
                     className="sr-only"
                   />
                   <UserCheck className="h-6 w-6 text-emerald-600 mb-1" />
@@ -83,11 +119,17 @@ export default function RegisterPage() {
                   </span>
                 </label>
 
-                <label className="flex flex-col items-center justify-between rounded-xl border-2 border-zinc-200 p-4 hover:border-emerald-600 cursor-pointer text-center">
+                <label
+                  className={`flex flex-col items-center justify-between rounded-xl border-2 p-4 cursor-pointer text-center transition-colors ${
+                    selectedRole === "PROVIDER"
+                      ? "border-emerald-600 bg-emerald-50/30"
+                      : "border-zinc-200 hover:border-emerald-600"
+                  }`}
+                >
                   <input
                     type="radio"
-                    name="role"
                     value="PROVIDER"
+                    {...register("role")}
                     className="sr-only"
                   />
                   <Store className="h-6 w-6 text-zinc-600 mb-1" />
@@ -101,44 +143,43 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                placeholder="Alex Morgan"
-                required
-                className="focus-visible:ring-emerald-500"
-              />
-            </div>
+            <InputField
+              label="Full Name"
+              name="name"
+              control={control}
+              placeholder="Alex Morgan"
+              required
+              error={errors.name?.message}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="reg-email">Email address</Label>
-              <Input
-                id="reg-email"
-                type="email"
-                placeholder="alex@example.com"
-                required
-                className="focus-visible:ring-emerald-500"
-              />
-            </div>
+            <InputField
+              label="Email address"
+              name="email"
+              control={control}
+              type="email"
+              placeholder="alex@example.com"
+              required
+              error={errors.email?.message}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="reg-password">Password</Label>
-              <Input
-                id="reg-password"
-                type="password"
-                placeholder="••••••••"
-                required
-                className="focus-visible:ring-emerald-500"
-              />
-            </div>
+            <InputField
+              label="Password"
+              name="password"
+              control={control}
+              type="password"
+              placeholder="••••••••"
+              required
+              error={errors.password?.message}
+            />
 
-            <Button
+            <DynamicActionButton
               type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              Create Account
-            </Button>
+              label="Create Account"
+              className="h-11! w-full"
+              icon={ArrowRight}
+              // isLoading={isLoading}
+              // disabled={isLoading}
+            />
           </form>
         </div>
 
