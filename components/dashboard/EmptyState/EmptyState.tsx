@@ -1,6 +1,6 @@
 'use client';
 
-import DynamicActionButton from '@/components/shared/DynamicActionButton/DynamicActionButton';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { FolderOpen, LucideIcon } from 'lucide-react';
 
 interface EmptyStateProps {

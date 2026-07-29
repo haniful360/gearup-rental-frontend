@@ -1,6 +1,3 @@
-const DashboardLayout = () => {
-  // console.log("hello");
-  return <div>DashboardLayout</div>;
-};
-
-export default DashboardLayout;
+export default function RootDashboardLayout({ children }: { children: React.ReactNode }) {
+  return children;
+}

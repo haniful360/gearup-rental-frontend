@@ -2,11 +2,11 @@
 /* eslint-disable no-unused-vars */
 'use client';
 import { Label } from '@/components/ui/label';
-import { useUploadFilesMutation } from '@/redux/features/fileUpload/fileUpload.api';
+// import { useUploadFilesMutation } from '@/redux/features/fileUpload/fileUpload.api';
 import { ImageIcon, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useId, useMemo } from 'react';
-import { toast } from 'sonner';
+// import { toast } from 'sonner';
 
 interface ImageUploadFieldProps {
   label: string;
@@ -28,7 +28,7 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   required = false,
 }) => {
   const uniqueInputId = useId();
-  const [uploadFiles, { isLoading: isUploading }] = useUploadFilesMutation();
+  const [uploadFiles, { isLoading: isUploading }] = [(async () => {}) as any, { isLoading: false }];
 
   const previewUrl = useMemo(() => {
     if (!value) return null;
@@ -51,13 +51,12 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
 
       if (uploadedUrl) {
         onChange(uploadedUrl);
-        toast.success(`${label} uploaded successfully!`);
+        console.log(`${label} uploaded successfully!`);
       } else {
-        toast.error('Failed to get uploaded file URL from server response.');
+        console.error('Failed to get uploaded file URL from server response.');
       }
     } catch (err: any) {
       console.error('Upload error:', err);
-      toast.error(err?.data?.message || 'Failed to upload image.');
     } finally {
       e.target.value = '';
     }

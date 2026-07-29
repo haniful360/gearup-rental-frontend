@@ -1,7 +1,7 @@
 'use client';
 
-import { roleTypes } from '@/components/dashboard/sidebar/sidebarRoutes';
-import DynamicActionButton from '@/components/shared/DynamicActionButton/DynamicActionButton';
+import { RoleTypes } from '@/components/dashboard/sidebar/sidebarRoutes';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,7 +66,7 @@ const notificationsData = [
   },
 ];
 
-function RightSection({ role }: { role: roleTypes }) {
+function RightSection({ role }: { role: RoleTypes }) {
   const { openModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -147,7 +147,7 @@ function RightSection({ role }: { role: roleTypes }) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {role === 'admin' && (
+      {role === 'ADMIN' && (
         <DynamicActionButton
           className="h-10!"
           label="New Alert"

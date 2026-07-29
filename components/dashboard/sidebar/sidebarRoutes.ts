@@ -1,88 +1,115 @@
 import {
-  AppWindow,
-  Award,
-  BookOpen,
   LayoutGrid,
-  MessagesSquare,
-  PlaySquare,
-  Settings,
-  Target,
+  ShoppingBag,
+  Star,
+  Package,
+  PlusCircle,
+  ClipboardList,
   Users,
-} from 'lucide-react';
+  ShieldCheck,
+  // CreditCard,
+  Settings,
+  Compass,
+} from "lucide-react";
 
-export type roleTypes = 'admin' | 'sarah' | 'sarah-team-member' | 'noah' | 'marcus';
+export type RoleTypes = "CUSTOMER" | "PROVIDER" | "ADMIN";
 
-// Super Admin Dashboard All Routes List
-export const AdminRoutes = [
+// Customer Dashboard Routes
+export const customerRoutes = [
   {
-    title: 'Overview',
-    url: '/dashboard/admin/overview',
+    title: "Overview",
+    url: "/dashboard/customer",
     icon: LayoutGrid,
   },
   {
-    title: 'User Management',
-    url: '/dashboard/admin/user-management',
-    icon: BookOpen,
-  },
-  // {
-  //   title: 'System Configs',
-  //   url: '/dashboard/admin/system-configs',
-  //   icon: Presentation,
-  // },
-  {
-    title: 'CMS / Content',
-    url: '/dashboard/admin/cms-content',
-    icon: Target,
+    title: "My Orders",
+    url: "/dashboard/customer/orders",
+    icon: ShoppingBag,
   },
   {
-    title: 'Billing',
-    url: '/dashboard/admin/billing',
-    icon: PlaySquare,
+    title: "Explore Gear",
+    url: "/dashboard/customer/gears",
+    icon: Compass,
   },
   {
-    title: 'Support Tickets',
-    url: '/dashboard/admin/support-tickets',
-    icon: Award,
+    title: "Reviews",
+    url: "/dashboard/customer/reviews",
+    icon: Star,
   },
   {
-    title: 'Settings',
-    url: '/dashboard/admin/settings',
+    title: "Settings",
+    url: "/dashboard/customer/settings",
     icon: Settings,
   },
 ];
 
-// sarah Dashboard All Routes List
-export const sarahRoutes = [
-  { title: 'Overview', url: '/dashboard/sarah/overview', icon: LayoutGrid },
-  { title: 'Team Management', url: '/dashboard/sarah/team-management', icon: Users },
-  { title: 'Team Chat', url: '/dashboard/sarah/chat', icon: MessagesSquare },
-  { title: 'Usage & Engagement', url: '/dashboard/sarah/usage-engagement', icon: PlaySquare },
-  { title: 'Content Library', url: '/dashboard/sarah/content-library', icon: AppWindow },
-  { title: 'Account Settings', url: '/dashboard/sarah/account-settings', icon: Settings },
+// Provider Dashboard Routes
+export const providerRoutes = [
+  {
+    title: "Overview",
+    url: "/dashboard/provider",
+    icon: LayoutGrid,
+  },
+  {
+    title: "My Inventory",
+    url: "/dashboard/provider/gear",
+    icon: Package,
+  },
+  {
+    title: "Add New Gear",
+    url: "/dashboard/provider/gear/new",
+    icon: PlusCircle,
+  },
+  {
+    title: "Incoming Orders",
+    url: "/dashboard/provider/orders",
+    icon: ClipboardList,
+  },
+  {
+    title: "Settings",
+    url: "/dashboard/provider/settings",
+    icon: Settings,
+  },
 ];
 
-export const sarahTeamMemberRoutes = [
-  { title: 'Overview', url: '/dashboard/sarah-team-member/overview', icon: LayoutGrid },
-  { title: 'Usage Analytics', url: '/dashboard/sarah-team-member/usage-analytics', icon: BookOpen },
-  { title: 'Value Vault', url: '/dashboard/sarah-team-member/value-vault', icon: PlaySquare },
-  { title: 'Team Chat', url: '/dashboard/sarah-team-member/team-chat', icon: MessagesSquare },
-  { title: 'Account Settings', url: '/dashboard/sarah-team-member/settings', icon: Settings },
+// Admin Dashboard Routes
+export const adminRoutes = [
+  {
+    title: "Overview",
+    url: "/dashboard/admin",
+    icon: LayoutGrid,
+  },
+  {
+    title: "User Management",
+    url: "/dashboard/admin/users",
+    icon: Users,
+  },
+  {
+    title: "Gear Moderation",
+    url: "/dashboard/admin/gear-moderation",
+    icon: ShieldCheck,
+  },
+  {
+    title: "All Rentals",
+    url: "/dashboard/admin/rentals",
+    icon: ClipboardList,
+  },
+  {
+    title: "Settings",
+    url: "/dashboard/admin/settings",
+    icon: Settings,
+  },
 ];
 
-export const noahRoutes = (onATeam?: boolean) => [
-  { title: 'Dashboard', url: '/dashboard/noah/overview', icon: LayoutGrid },
-  { title: 'Usage Analytics', url: '/dashboard/noah/usage-analytics', icon: BookOpen },
-  { title: 'Value Vault', url: '/dashboard/noah/value-vault', icon: PlaySquare },
-  ...(onATeam
-    ? [{ title: 'Team Message', url: '/dashboard/noah/team-chat', icon: MessagesSquare }]
-    : []),
-  { title: 'Settings', url: '/dashboard/noah/settings', icon: Settings },
-];
-
-export const marcusRoutes = [
-  { title: 'Overview', url: '/dashboard/marcus/overview', icon: LayoutGrid },
-  { title: 'Team Management', url: '/dashboard/marcus/team-management', icon: Users },
-  { title: 'Usage & Engagement', url: '/dashboard/marcus/usage-engagement', icon: PlaySquare },
-  { title: 'Content Library', url: '/dashboard/marcus/content-library', icon: AppWindow },
-  { title: 'Account Settings', url: '/dashboard/marcus/account-settings', icon: Settings },
-];
+// Helper Function to Dynamically Get Navigation by Role
+export const getSidebarRoutesByRole = (role: RoleTypes) => {
+  switch (role) {
+    case "ADMIN":
+      return adminRoutes;
+    case "PROVIDER":
+      return providerRoutes;
+    case "CUSTOMER":
+    default:
+      return customerRoutes;
+  }
+};

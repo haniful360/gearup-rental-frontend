@@ -31,15 +31,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function Navbar() {
   const isLoggedIn = true;
   const userRole: "CUSTOMER" | "PROVIDER" | "ADMIN" = "CUSTOMER";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Brand Logo */}
         <Link
           href="/"
           className="flex items-center gap-2 font-bold text-xl tracking-tight text-emerald-600"
@@ -48,21 +48,19 @@ export function Navbar() {
             <Dumbbell className="h-5 w-5" />
           </div>
           <span>
-            Gear<span className="text-zinc-900 dark:text-white">Up</span>
+            Gear<span className="text-foreground">Up</span>
           </span>
         </Link>
 
-        {/* Search Bar - Center Desktop */}
         <div className="hidden md:flex relative max-w-md w-full mx-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search kayaks, tents, bikes, climbing gear..."
-            className="pl-9 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 focus-visible:ring-emerald-500 rounded-full"
+            className="pl-9 bg-muted border-border focus-visible:ring-emerald-500 rounded-full"
           />
         </div>
 
-        {/* Navigation Links - Desktop */}
         <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
           <Link
             href="/gear"
@@ -85,11 +83,11 @@ export function Navbar() {
           </Link>
         </nav>
 
-        {/* Right Actions / Auth Area */}
         <div className="flex items-center gap-3">
+          <ThemeToggle />
+
           {isLoggedIn ? (
             <>
-              {/* Notification Trigger */}
               <Button
                 variant="ghost"
                 size="icon"
@@ -99,12 +97,11 @@ export function Navbar() {
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-emerald-600" />
               </Button>
 
-              {/* Quick Dashboard Action */}
               <Button
                 variant="outline"
                 size="sm"
                 asChild
-                className="hidden sm:inline-flex border-emerald-200 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800"
+                className="hidden sm:inline-flex border-emerald-200 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-400 dark:hover:bg-emerald-950/50"
               >
                 <Link href={`/dashboard/${userRole.toLowerCase()}`}>
                   <LayoutDashboard className="mr-1.5 h-4 w-4" />
@@ -112,7 +109,6 @@ export function Navbar() {
                 </Link>
               </Button>
 
-              {/* User Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -124,7 +120,7 @@ export function Navbar() {
                         src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
                         alt="User Avatar"
                       />
-                      <AvatarFallback className="bg-emerald-100 text-emerald-800">
+                      <AvatarFallback className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
                         GU
                       </AvatarFallback>
                     </Avatar>
@@ -142,7 +138,7 @@ export function Navbar() {
                       <div className="mt-1.5">
                         <Badge
                           variant="secondary"
-                          className="bg-emerald-100 text-emerald-800 text-[10px]"
+                          className="bg-emerald-100 text-emerald-800 text-[10px] dark:bg-emerald-900 dark:text-emerald-200"
                         >
                           {userRole}
                         </Badge>
@@ -180,7 +176,7 @@ export function Navbar() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-rose-600 focus:bg-rose-50 cursor-pointer">
+                  <DropdownMenuItem className="text-rose-600 focus:bg-rose-50 dark:focus:bg-rose-950 cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
                     Log out
                   </DropdownMenuItem>
@@ -190,19 +186,18 @@ export function Navbar() {
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/auth/login">Log in</Link>
+                <Link href="/login">Log in</Link>
               </Button>
               <Button
                 size="sm"
                 className="bg-emerald-600 hover:bg-emerald-700 text-white"
                 asChild
               >
-                <Link href="/auth/register">Get Started</Link>
+                <Link href="/register">Get Started</Link>
               </Button>
             </div>
           )}
 
-          {/* Mobile Drawer Navigation */}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
@@ -223,26 +218,26 @@ export function Navbar() {
                 <nav className="flex flex-col gap-2 font-medium">
                   <Link
                     href="/gear"
-                    className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
                   >
                     Explore Gear
                   </Link>
                   <Link
                     href="/categories"
-                    className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
                   >
                     Categories
                   </Link>
                   <Link
                     href="/how-it-works"
-                    className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
                   >
                     How it Works
                   </Link>
                   {isLoggedIn && (
                     <Link
                       href={`/dashboard/${userRole.toLowerCase()}`}
-                      className="p-2 rounded-md bg-emerald-50 text-emerald-700 font-semibold"
+                      className="p-2 rounded-md bg-emerald-50 text-emerald-700 font-semibold dark:bg-emerald-950 dark:text-emerald-400"
                     >
                       My Dashboard
                     </Link>

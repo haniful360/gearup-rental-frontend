@@ -1,18 +1,16 @@
 'use client';
 
-import GradientWrapper from '@/components/dashboard/GradientWrapper/GradientWrapper';
 import { SidebarFooter, SidebarMenu, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { ArrowUpRight, Crown } from 'lucide-react';
 import Link from 'next/link';
-import { roleTypes } from '../../sidebarRoutes';
+import { RoleTypes } from '../../sidebarRoutes';
 
-export default function SidebarFooterSection({ role }: { role: roleTypes }) {
+export default function SidebarFooterSection({ role }: { role: RoleTypes }) {
   const { state } = useSidebar();
   const isExpanded = state === 'expanded';
 
-  // Allowed dynamic roles validation matrix tracking
-  const allowedClients: roleTypes[] = ['sarah', 'noah', 'marcus'];
+  const allowedClients: RoleTypes[] = ['CUSTOMER', 'PROVIDER'];
   const shouldShowUpgrade = allowedClients.includes(role);
 
   return (
@@ -22,11 +20,7 @@ export default function SidebarFooterSection({ role }: { role: roleTypes }) {
           {shouldShowUpgrade && (
             <div>
               {isExpanded ? (
-                <GradientWrapper
-                  color="yellow"
-                  innerClassName="relative z-10 flex flex-col items-center p-3 text-center py-5"
-                >
-                  {/* Crown Icon */}
+                <div className="flex flex-col items-center rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 py-5 text-center">
                   <div className="relative mb-3.5 animate-bounce">
                     <div className="absolute inset-0 rounded-full bg-amber-500/20 blur-md" />
                     <Crown
@@ -37,8 +31,8 @@ export default function SidebarFooterSection({ role }: { role: roleTypes }) {
                   </div>
 
                   <div className="space-y-1">
-                    <h2 className="text-lg font-bold text-white">Upgrade to Pro</h2>
-                    <p className="text-sm leading-tight text-white/90">
+                    <h2 className="text-lg font-bold text-sidebar-foreground">Upgrade to Pro</h2>
+                    <p className="text-sm leading-tight text-sidebar-foreground/70">
                       Unlock all premium features and components.
                     </p>
                   </div>
@@ -50,15 +44,12 @@ export default function SidebarFooterSection({ role }: { role: roleTypes }) {
                     Upgrade Now
                     <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </Link>
-                </GradientWrapper>
+                </div>
               ) : (
-                /* --- Collapsed State: Minimal Crown Icon --- */
                 <div className="flex flex-col items-center justify-center gap-2">
                   <button className="group relative flex h-10 w-10 animate-bounce cursor-pointer items-center justify-center rounded-md border border-amber-500/30 bg-amber-500/10 transition-all">
                     <Crown className="h-5 w-5 text-[#FBBF24]" fill="#FBBF24" fillOpacity={0.2} />
-
-                    {/* Tooltip logic */}
-                    <div className="invisible absolute left-12 z-50 rounded-md border border-white/10 bg-[#0B1222] px-2 py-1 text-[10px] whitespace-nowrap text-white group-hover:visible">
+                    <div className="invisible absolute left-12 z-50 rounded-md border border-border bg-background px-2 py-1 text-[10px] whitespace-nowrap text-foreground group-hover:visible">
                       Upgrade to Premium
                     </div>
                   </button>

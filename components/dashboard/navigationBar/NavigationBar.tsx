@@ -1,11 +1,11 @@
 'use client';
 
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { roleTypes } from '../sidebar/sidebarRoutes';
+import { RoleTypes } from '../sidebar/sidebarRoutes';
 import { DynamicBreadcrumb } from './_components/DynamicBreadcrumb/DynamicBreadcrumb';
 import RightSection from './_components/RightSection/RightSection';
 
-export default function NavigationBar({ role }: { role: roleTypes }) {
+export default function NavigationBar({ role }: { role: RoleTypes }) {
   return (
     <header className="sticky top-0 z-50 flex w-full shrink-0 items-center border-b border-gray-800/50 bg-[#0B1120] px-4 py-3.5 lg:px-6">
       <div className="flex w-full items-center justify-between gap-4">

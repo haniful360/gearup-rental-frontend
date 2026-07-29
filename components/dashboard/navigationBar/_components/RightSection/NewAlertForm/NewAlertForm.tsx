@@ -8,7 +8,7 @@ import * as z from 'zod';
 
 import SelectField from '@/components/dashboard/Fields/SelectField/SelectField';
 import TextAreaField from '@/components/dashboard/Fields/TextAreaField/TextAreaField';
-import DynamicActionButton from '@/components/shared/DynamicActionButton/DynamicActionButton';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { useModal } from '@/context/ModalContext';
 import { cn } from '@/lib/utils';
 import { useCreateAlertMutation } from '@/redux/features/admin/alertManagement/alertManagement.api';
