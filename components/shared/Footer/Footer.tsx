@@ -222,7 +222,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-zinc-900 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-          <p>© {new Date().getFullYear()} GearUp Inc. All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} GearUp Inc. All rights reserved.</p>
           <p className="flex items-center gap-1">
             Built for outdoor enthusiasts with{" "}
             <Heart className="h-3 w-3 text-rose-500 fill-rose-500" />
