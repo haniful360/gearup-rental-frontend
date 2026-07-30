@@ -37,14 +37,14 @@ function SidebarContentSection({ role }: { role: RoleTypes }) {
   const menuItems = roleBaseRoutes[role] || [];
 
   return (
-    <SidebarContent className="px-3 pt-4 no-scrollbar">
+    <SidebarContent className="px-4 pt-5 no-scrollbar">
       <SidebarGroup>
         {state === 'expanded' && (
           <SidebarGroupLabel className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sidebar-foreground/40">
             {groupLabels[role]}
           </SidebarGroupLabel>
         )}
-        <SidebarMenu className="mt-1 gap-0.5">
+        <SidebarMenu className="mt-2 gap-1">
           {menuItems.map((item) => {
             const isActive = pathname === item?.url;
             const Icon = item?.icon;
@@ -54,7 +54,7 @@ function SidebarContentSection({ role }: { role: RoleTypes }) {
                 <SidebarMenuButton
                   isActive={isActive}
                   tooltip={state === 'collapsed' ? item?.title : undefined}
-                  className={`gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                  className={`gap-4 rounded-xl px-5 py-3.5 text-sm font-medium transition-all duration-200 ${
                     isActive
                       ? 'bg-emerald-500/10! text-emerald-400! shadow-sm shadow-emerald-500/5'
                       : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground'
@@ -63,7 +63,7 @@ function SidebarContentSection({ role }: { role: RoleTypes }) {
                 >
                   <span
                     onClick={() => isMobile && setOpenMobile(false)}
-                    className="flex items-center gap-3 w-full transition-all duration-200"
+                    className="flex items-center gap-4 w-full transition-all duration-200"
                   >
                     <span className={`flex items-center justify-center transition-all duration-200 ${
                       isActive ? 'scale-110' : ''

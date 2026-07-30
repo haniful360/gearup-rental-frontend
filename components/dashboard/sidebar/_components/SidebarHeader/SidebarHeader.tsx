@@ -22,8 +22,8 @@ function SidebarHeaderSection({ role }: { role: RoleTypes }) {
   const isExpanded = state === 'expanded';
 
   return (
-    <SidebarHeader className="border-b border-sidebar-border pb-4">
-      <Link href="/" className="flex items-center gap-3 px-4 pt-4">
+    <SidebarHeader className="border-b border-sidebar-border pb-5">
+      <Link href="/" className="flex items-center gap-4 px-6 pt-6">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 text-white shadow-lg shadow-emerald-500/20 shrink-0">
           <Dumbbell className="h-5 w-5" />
         </div>

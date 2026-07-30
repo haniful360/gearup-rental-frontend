@@ -10,7 +10,7 @@ export default function SidebarFooterSection() {
   return (
     <SidebarFooter className={cn(
       'border-t border-sidebar-border transition-all duration-300',
-      isExpanded ? 'p-4' : 'p-3'
+      isExpanded ? 'p-5' : 'p-4'
     )}>
       {isExpanded ? (
         <p className="text-center text-[10px] text-sidebar-foreground/25 tracking-wider">

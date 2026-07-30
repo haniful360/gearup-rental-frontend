@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Compass, Zap, ShieldCheck, Star, Users, Package, Search, Handshake, TrendingUp } from "lucide-react";
+import { ArrowRight, Compass, Zap, ShieldCheck, Star, Users, Package, Search, Handshake, TrendingUp, Tag } from "lucide-react";
+import { getAllCategories } from "@/service/category/getAll";
 
-const categories = [
-  { name: "Camping & Hiking", items: "120+", icon: "🏕️", color: "from-emerald-500/20 to-emerald-600/10" },
-  { name: "Water Sports", items: "85+", icon: "🏄", color: "from-blue-500/20 to-blue-600/10" },
-  { name: "Bikes & Cycling", items: "60+", icon: "🚴", color: "from-amber-500/20 to-amber-600/10" },
-  { name: "Winter Sports", items: "45+", icon: "⛷️", color: "from-cyan-500/20 to-cyan-600/10" },
-  { name: "Fitness & Gym", items: "90+", icon: "🏋️", color: "from-rose-500/20 to-rose-600/10" },
-  { name: "Climbing", items: "35+", icon: "🧗", color: "from-orange-500/20 to-orange-600/10" },
+const gradients = [
+  "from-emerald-500/20 to-emerald-600/10",
+  "from-blue-500/20 to-blue-600/10",
+  "from-amber-500/20 to-amber-600/10",
+  "from-cyan-500/20 to-cyan-600/10",
+  "from-rose-500/20 to-rose-600/10",
+  "from-orange-500/20 to-orange-600/10",
+  "from-purple-500/20 to-purple-600/10",
+  "from-pink-500/20 to-pink-600/10",
 ];
 
 const steps = [
@@ -37,6 +40,17 @@ const gearItems = [
   { name: "Snowboard Set Elite", price: 40, period: "day", image: "🏂" },
 ];
 
+const categoryColors = [
+  { bg: "bg-emerald-500/10", text: "text-emerald-400" },
+  { bg: "bg-blue-500/10", text: "text-blue-400" },
+  { bg: "bg-amber-500/10", text: "text-amber-400" },
+  { bg: "bg-cyan-500/10", text: "text-cyan-400" },
+  { bg: "bg-rose-500/10", text: "text-rose-400" },
+  { bg: "bg-orange-500/10", text: "text-orange-400" },
+  { bg: "bg-purple-500/10", text: "text-purple-400" },
+  { bg: "bg-pink-500/10", text: "text-pink-400" },
+];
+
 function StarRating({ count }: { count: number }) {
   return (
     <div className="flex gap-0.5">
@@ -47,7 +61,10 @@ function StarRating({ count }: { count: number }) {
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const categoriesResult = await getAllCategories();
+  const categories = categoriesResult?.data || [];
+
   return (
     <div className="flex flex-col">
       {/* ──────── HERO ──────── */}
@@ -146,17 +163,21 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map((cat) => (
+            {categories.map((cat: { _id: string; name: string; description?: string }, idx: number) => (
               <Link
-                key={cat.name}
-                href="/gear"
+                key={cat._id}
+                href={`/gear?category=${cat._id}`}
                 className="group relative overflow-hidden rounded-2xl border bg-card p-5 hover:border-emerald-500/50 transition-all shadow-sm hover:shadow-md"
               >
-                <div className={`absolute inset-0 bg-linear-to-b ${cat.color} opacity-0 group-hover:opacity-100 transition-opacity`} />
+                <div className={`absolute inset-0 bg-linear-to-b ${gradients[idx % gradients.length]} opacity-0 group-hover:opacity-100 transition-opacity`} />
                 <div className="relative">
-                  <span className="text-3xl">{cat.icon}</span>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${categoryColors[idx % categoryColors.length].bg}`}>
+                    <Tag className={`h-5 w-5 ${categoryColors[idx % categoryColors.length].text}`} />
+                  </div>
                   <h3 className="font-semibold mt-3 text-sm">{cat.name}</h3>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">{cat.items} items</p>
+                  {cat.description && (
+                    <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">{cat.description}</p>
+                  )}
                 </div>
               </Link>
             ))}

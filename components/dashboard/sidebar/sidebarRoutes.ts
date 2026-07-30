@@ -10,6 +10,7 @@ import {
   // CreditCard,
   Settings,
   Compass,
+  FolderTree,
 } from "lucide-react";
 
 export type RoleTypes = "CUSTOMER" | "PROVIDER" | "ADMIN";
@@ -83,6 +84,11 @@ export const adminRoutes = [
     title: "User Management",
     url: "/dashboard/admin/users",
     icon: Users,
+  },
+  {
+    title: "Categories",
+    url: "/dashboard/admin/categories",
+    icon: FolderTree,
   },
   {
     title: "Gear Moderation",
