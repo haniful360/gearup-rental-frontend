@@ -1,8 +1,5 @@
-// import { Navbar } from "@/components/shared/Navbar";
-// import { Footer } from "@/components/shared/Footer";
-
 import { Footer } from "@/components/shared/Footer/Footer";
-import { Navbar } from "@/components/shared/Navbar/Navbar";
+import { NavbarWrapper } from "@/components/shared/Navbar/NavbarWrapper";
 
 export default function MainLayout({
   children,
@@ -11,13 +8,10 @@ export default function MainLayout({
 }) {
   return (
     <div className="relative flex min-h-screen flex-col bg-background font-sans antialiased">
-      {/* Public Top Navbar */}
-      <Navbar />
+      <NavbarWrapper />
 
-      {/* Main Page Content */}
       <main className="flex-1">{children}</main>
 
-      {/* Public Footer */}
       <Footer />
     </div>
   );

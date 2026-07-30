@@ -2,10 +2,12 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import {
   Search,
   Dumbbell,
@@ -26,14 +28,43 @@ import {
 } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useClickAway } from "@/hooks/use-click-away";
+import { logout } from "@/service/auth/logout";
 
-export function Navbar() {
-  const isLoggedIn = true;
-  const userRole: "CUSTOMER" | "PROVIDER" | "ADMIN" = "CUSTOMER";
+interface NavbarUser {
+  name: string;
+  email: string;
+  role: "CUSTOMER" | "PROVIDER" | "ADMIN" | null;
+}
+
+interface NavbarProps {
+  user: NavbarUser | null;
+}
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
+export function Navbar({ user }: NavbarProps) {
+  const isLoggedIn = !!user;
+  const userRole = user?.role || "CUSTOMER";
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useClickAway(menuRef, () => setMenuOpen(false));
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logged out successfully");
+    setMenuOpen(false);
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -95,17 +126,6 @@ export function Navbar() {
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-emerald-600" />
               </Button>
 
-              <Button
-                variant="outline"
-                size="sm"
-                asChild
-                className="hidden sm:inline-flex border-emerald-200 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-400 dark:hover:bg-emerald-950/50"
-              >
-                <Link href={`/dashboard/${userRole.toLowerCase()}`}>
-                  <LayoutDashboard className="mr-1.5 h-4 w-4" />
-                  Dashboard
-                </Link>
-              </Button>
 
               <div ref={menuRef} className="relative">
                 <button
@@ -114,11 +134,11 @@ export function Navbar() {
                 >
                   <Avatar className="h-9 w-9">
                     <AvatarImage
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
-                      alt="User Avatar"
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "")}&background=059669&color=fff`}
+                      alt={user?.name || "User"}
                     />
                     <AvatarFallback className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
-                      GU
+                      {user?.name ? getInitials(user.name) : "GU"}
                     </AvatarFallback>
                   </Avatar>
                 </button>
@@ -126,9 +146,9 @@ export function Navbar() {
                 {menuOpen && (
                   <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border bg-popover p-1 shadow-lg z-50">
                     <div className="px-2 py-1.5">
-                      <p className="text-sm font-medium leading-none">Alex Morgan</p>
+                      <p className="text-sm font-medium leading-none">{user?.name}</p>
                       <p className="text-xs leading-none text-muted-foreground mt-1">
-                        alex@gearup.com
+                        {user?.email}
                       </p>
                       <div className="mt-1.5">
                         <Badge
@@ -168,7 +188,7 @@ export function Navbar() {
                     </Link>
                     <div className="my-1 h-px bg-border" />
                     <button
-                      onClick={() => setMenuOpen(false)}
+                      onClick={handleLogout}
                       className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 transition-colors cursor-pointer"
                     >
                       <LogOut className="h-4 w-4" />

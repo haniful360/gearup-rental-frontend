@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/incompatible-library */
 "use client";
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import {
   Dumbbell,
@@ -10,31 +12,61 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import InputField from "@/components/dashboard/Fields/InputField/InputField";
 import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
+import { register } from "@/service/user/register";
 
-interface RegisterForm {
-  name: string;
-  email: string;
-  password: string;
-  role: "CUSTOMER" | "PROVIDER";
-}
+const registerSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["CUSTOMER", "PROVIDER"]),
+});
+
+type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const {
     control,
-    register,
+    register: registerField,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<RegisterForm>({
+    resolver: zodResolver(registerSchema),
     defaultValues: { name: "", email: "", password: "", role: "CUSTOMER" },
   });
 
   const selectedRole = watch("role");
 
-  const onSubmit = (data: RegisterForm) => {
-    console.log(data);
+  const onSubmit = async (data: RegisterForm) => {
+    setIsLoading(true);
+
+    try {
+      const result = await register(data);
+      console.log('register', result.message)
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+      toast.success(result.message);
+      router.refresh();
+      router.push("/login");
+    } catch (error) {
+      // Handles unexpected runtime or network errors
+      const errorMessage =
+        error instanceof Error ? error.message : "Something went wrong!";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -107,7 +139,7 @@ export default function RegisterPage() {
                   <input
                     type="radio"
                     value="CUSTOMER"
-                    {...register("role")}
+                    {...registerField("role")}
                     className="sr-only"
                   />
                   <UserCheck className="h-6 w-6 text-emerald-600 mb-1" />
@@ -129,7 +161,7 @@ export default function RegisterPage() {
                   <input
                     type="radio"
                     value="PROVIDER"
-                    {...register("role")}
+                    {...registerField("role")}
                     className="sr-only"
                   />
                   <Store className="h-6 w-6 text-zinc-600 mb-1" />
@@ -177,8 +209,8 @@ export default function RegisterPage() {
               label="Create Account"
               className="h-11! w-full"
               icon={ArrowRight}
-              // isLoading={isLoading}
-              // disabled={isLoading}
+              isLoading={isLoading}
+              disabled={isLoading}
             />
           </form>
         </div>

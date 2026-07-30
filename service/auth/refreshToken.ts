@@ -30,5 +30,21 @@ export const refreshToken = async () => {
     return { success: false, message: result.message || "Token refresh failed" }
   }
 
+  cookieStore.set("accessToken", result.data.accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: 60 * 60 * 24,
+    path: "/",
+  })
+
+  cookieStore.set("refreshToken", result.data.refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  })
+
   return result
 }

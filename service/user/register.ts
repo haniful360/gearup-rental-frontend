@@ -1,13 +1,11 @@
 "use server"
 
-interface RegisterPayload {
+export const register = async (payload: {
   name: string
   email: string
   password: string
   role: "CUSTOMER" | "PROVIDER"
-}
-
-export const register = async (payload: RegisterPayload) => {
+}) => {
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/user/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

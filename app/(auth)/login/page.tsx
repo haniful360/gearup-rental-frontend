@@ -1,29 +1,68 @@
-'use client'
+"use client";
+import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Dumbbell, ShieldCheck, ArrowRight } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import InputField from "@/components/dashboard/Fields/InputField/InputField";
 import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
+import { login } from "@/service/auth/login";
 
-interface LoginForm {
-  email: string;
-  password: string;
-}
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (data: LoginForm) => {
-    console.log(data);
+  const onSubmit = async (data: LoginForm) => {
+    setIsLoading(true);
+
+    try {
+      const result = await login(data);
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      toast.success(result.message);
+      router.refresh();
+
+      const role = result.data?.user?.role;
+
+      if (role === "ADMIN") {
+        router.push("/dashboard/admin");
+      } else if (role === "PROVIDER") {
+        router.push("/dashboard/provider");
+      } else {
+        router.push("/dashboard/customer");
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Something went wrong!";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -97,8 +136,8 @@ export default function LoginPage() {
               label="Sign in to GearUp"
               className="h-11! w-full"
               icon={ArrowRight}
-              // isLoading={isLoading}
-              // disabled={isLoading}
+              isLoading={isLoading}
+              disabled={isLoading}
             />
           </form>
 
