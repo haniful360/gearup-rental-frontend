@@ -52,15 +52,15 @@ export default function DashboardLayout({
     <SidebarProvider>
       <AppSidebar role={role} />
       <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background px-4">
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border dark:border-white/5 bg-background dark:bg-[#0F1A2C] px-4">
           <div className="flex flex-1 items-center gap-2">
             <SidebarTrigger />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Dumbbell className="h-4 w-4 text-emerald-500" />
-              <span className="font-medium">GearUp</span>
+              <span className="font-medium text-foreground">GearUp</span>
               <span className="text-muted-foreground/50">/</span>
-              <span className="capitalize text-foreground">{role.toLowerCase()}</span>
+              <span className="capitalize text-foreground font-medium">{role.toLowerCase()}</span>
             </div>
           </div>
 
@@ -103,7 +103,7 @@ export default function DashboardLayout({
             </div>
           </div>
         </header>
-        <main className="flex flex-1 flex-col bg-muted/30 p-6 text-foreground">{children}</main>
+        <main className="flex flex-1 flex-col bg-muted/30 dark:bg-[#0F1A2C] p-6 text-foreground">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );

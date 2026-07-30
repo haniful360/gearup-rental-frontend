@@ -13,7 +13,7 @@ export function AppSidebar({
   ...props
 }: { role: RoleTypes } & React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border/50 shadow-2xl shadow-black/10" {...props}>
       <SidebarHeaderSection role={role} />
       <SidebarContentSection role={role} />
       <SidebarFooterSection />
