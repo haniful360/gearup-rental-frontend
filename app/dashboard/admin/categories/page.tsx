@@ -2,7 +2,7 @@ import { getAllCategories } from "@/service/category/getAll";
 import CategoriesClient from "./CategoriesClient";
 
 export type Category = {
-  _id: string;
+  id: string;
   name: string;
   description: string;
 };

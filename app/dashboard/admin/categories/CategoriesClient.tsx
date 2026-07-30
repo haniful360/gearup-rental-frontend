@@ -2,19 +2,28 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus } from 'lucide-react';
+import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
 import DynamicPageHeader from '@/components/dashboard/DynamicPageHeader/DynamicPageHeader';
-import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -26,10 +35,11 @@ import type { Category } from './page';
 export default function CategoriesClient({ initialCategories }: { initialCategories: Category[] }) {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>(initialCategories);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [formData, setFormData] = useState({ name: '', description: '' });
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Category | null>(null);
 
   const resetForm = useCallback(() => {
     setFormData({ name: '', description: '' });
@@ -38,13 +48,13 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
 
   const openCreate = useCallback(() => {
     resetForm();
-    setSheetOpen(true);
+    setDialogOpen(true);
   }, [resetForm]);
 
   const openEdit = useCallback((cat: Category) => {
     setEditingCategory(cat);
     setFormData({ name: cat.name, description: cat.description });
-    setSheetOpen(true);
+    setDialogOpen(true);
   }, []);
 
   const handleSave = async () => {
@@ -55,7 +65,7 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
     setSaving(true);
     try {
       if (editingCategory) {
-        const result = await updateCategory(editingCategory._id, formData);
+        const result = await updateCategory(editingCategory.id, formData);
         if (!result.success) {
           toast.error(result.message || 'Failed to update category');
           return;
@@ -69,7 +79,7 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
         }
         toast.success('Category created successfully');
       }
-      setSheetOpen(false);
+      setDialogOpen(false);
       resetForm();
       router.refresh();
     } catch {
@@ -79,23 +89,26 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      const result = await deleteCategory(id);
+      const result = await deleteCategory(deleteTarget.id);
       if (!result.success) {
         toast.error(result.message || 'Failed to delete category');
         return;
       }
       toast.success('Category deleted successfully');
-      setCategories((prev) => prev.filter((c) => c._id !== id));
+      setCategories((prev) => prev.filter((c) => c.id !== deleteTarget.id));
       router.refresh();
     } catch {
       toast.error('Something went wrong');
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
   const columns = [
+    { header: '#', cell: (_: Category, index?: number) => <span className="text-xs">{(index ?? 0) + 1}</span> },
     { header: 'Name', accessor: 'name' as const },
     {
       header: 'Description',
@@ -106,14 +119,25 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
     },
     {
       header: 'Actions',
-      accessor: '_id' as const,
       cell: (row: Category) => (
-        <DynamicTableActions
-          actions={[
-            { type: 'edit', onClick: () => openEdit(row) },
-            { type: 'delete', onClick: () => handleDelete(row._id) },
-          ]}
-        />
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => openEdit(row)}
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
+          </Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => setDeleteTarget(row)}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Delete
+          </Button>
+        </div>
       ),
     },
   ];
@@ -125,28 +149,29 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
           title="Categories"
           description="Manage gear categories"
         />
-        <DynamicActionButton
-          label="Add Category"
-          icon={Plus}
-          showIcon
+        <Button
           onClick={openCreate}
-        />
+          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+        >
+          <Plus className="h-4 w-4" />
+          Add Category
+        </Button>
       </div>
 
       <div className="rounded-xl border bg-card shadow-sm">
         <CustomTable columns={columns} data={categories} />
       </div>
 
-      <Sheet open={sheetOpen} onOpenChange={(open) => { if (!open) { setSheetOpen(false); resetForm(); } }}>
-        <SheetContent side="right" className="w-full sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle>{editingCategory ? 'Edit Category' : 'Add Category'}</SheetTitle>
-            <SheetDescription>
+      <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) { setDialogOpen(false); resetForm(); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingCategory ? 'Edit Category' : 'Add Category'}</DialogTitle>
+            <DialogDescription>
               {editingCategory ? 'Update the category details below.' : 'Fill in the details to create a new category.'}
-            </SheetDescription>
-          </SheetHeader>
+            </DialogDescription>
+          </DialogHeader>
 
-          <div className="mt-6 flex flex-1 flex-col gap-5 px-4">
+          <div className="flex flex-col gap-5 py-4">
             <div className="space-y-2">
               <Label htmlFor="name">Name <span className="text-rose-500">*</span></Label>
               <Input
@@ -168,15 +193,35 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
             </div>
           </div>
 
-          <div className="mt-auto border-t p-4">
-            <DynamicActionButton
-              label={editingCategory ? 'Update Category' : 'Create Category'}
+          <div className="flex justify-end gap-3 border-t pt-4">
+            <Button variant="outline" onClick={() => { setDialogOpen(false); resetForm(); }}>
+              Cancel
+            </Button>
+            <Button
               onClick={handleSave}
-              isLoading={saving}
-            />
+              disabled={saving}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              {saving ? 'Saving...' : editingCategory ? 'Update Category' : 'Create Category'}
+            </Button>
           </div>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Category</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{deleteTarget?.name}</strong>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -24,7 +24,7 @@ const CustomTable = <T extends object>({ columns, data }: ITableProps<T>) => {
                 <td key={colIndex} className="px-6 py-4 text-sm whitespace-nowrap text-[#94A3B8]">
                   {'accessor' in column && column?.accessor
                     ? String(row[column?.accessor] ?? '')
-                    : column?.cell?.(row)}
+                    : column?.cell?.(row, rowIndex)}
                 </td>
               ))}
             </tr>
