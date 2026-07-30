@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/sidebar/AppSidebar';
 import { RoleTypes } from '@/components/dashboard/sidebar/sidebarRoutes';
@@ -8,31 +9,44 @@ import { Separator } from '@/components/ui/separator';
 import { Dumbbell, LogOut, ChevronDown } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { toast } from 'sonner';
 import { useClickAway } from '@/hooks/use-click-away';
+import { logout } from '@/service/auth/logout';
+
+interface DashboardUser {
+  id: string
+  name: string
+  email: string
+  role: string
+}
 
 export default function DashboardLayout({
   children,
   role,
+  user,
 }: {
   children: React.ReactNode;
   role: RoleTypes;
+  user: DashboardUser;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useClickAway(menuRef, () => setMenuOpen(false));
-
-  const user = {
-    name: 'Alex Morgan',
-    email: 'alex@gearup.com',
-    role,
-  };
 
   const initials = user.name
     .split(' ')
     .map((n) => n[0])
     .join('')
     .toUpperCase();
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logged out successfully");
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <SidebarProvider>
@@ -78,7 +92,7 @@ export default function DashboardLayout({
                   </div>
                   <div className="my-1 h-px bg-border" />
                   <button
-                    onClick={() => setMenuOpen(false)}
+                    onClick={handleLogout}
                     className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 cursor-pointer"
                   >
                     <LogOut className="h-4 w-4" />
