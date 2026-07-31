@@ -1,6 +1,17 @@
 import { getAllGearItems } from "@/service/gear-items/getAll";
 import { getAllCategories } from "@/service/category/getAll";
-import InventoryClient from "./_components/InventoryClient";
+import GearItemsManageTable from "./_components/GearItemsManageTable/GearItemsManageTable";
+
+export type GearItem = {
+  id: string;
+  title: string;
+  description: string;
+  pricePerDay: number;
+  location: string;
+  brand: string;
+  stock: number;
+  categoryId?: string;
+};
 
 export default async function ProviderInventoryPage() {
   const [gearResult, catResult] = await Promise.all([
@@ -11,5 +22,5 @@ export default async function ProviderInventoryPage() {
   const items = gearResult?.data || [];
   const categories = catResult?.data || [];
 
-  return <InventoryClient initialItems={items} categories={categories} />;
+  return <GearItemsManageTable initialItems={items} categories={categories} />;
 }

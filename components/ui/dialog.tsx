@@ -34,8 +34,9 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  maxHeight = "80vh",
   ...props
-}: DialogPrimitive.Popup.Props & { showCloseButton?: boolean }) {
+}: DialogPrimitive.Popup.Props & { showCloseButton?: boolean; maxHeight?: string }) {
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -48,7 +49,7 @@ function DialogContent({
           )}
           {...props}
         >
-          <div className="max-h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" style={{ maxHeight }}>
             <div className="p-6">
               {children}
             </div>

@@ -1,17 +1,28 @@
 import { Control, FieldErrors } from "react-hook-form";
+import { z } from "zod";
 import InputField from "@/components/dashboard/Fields/InputField/InputField";
 import TextAreaField from "@/components/dashboard/Fields/TextAreaField/TextAreaField";
 import SelectField from "@/components/dashboard/Fields/SelectField/SelectField";
 
-export interface GearFormData {
-  title: string;
-  description: string;
-  pricePerDay: number;
-  location: string;
-  brand: string;
-  stock: number;
-  categoryId: string;
-}
+export const gearItemSchema = z.object({
+  title: z.string().min(2, "Title must be at least 2 characters"),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters"),
+  pricePerDay: z
+    .any()
+    .transform((value) => Number(value))
+    .refine((value) => value > 0, "Price per day must be greater than 0"),
+  location: z.string().min(2, "Location must be at least 2 characters"),
+  brand: z.string().min(1, "Brand is required"),
+  stock: z
+    .any()
+    .transform((value) => Number(value))
+    .refine((value) => value >= 1, "Stock must be at least 1"),
+  categoryId: z.string().min(1, "Please select a category"),
+});
+
+export type GearFormData = z.output<typeof gearItemSchema>;
 
 interface GearItemFormProps {
   control: Control<GearFormData>;
