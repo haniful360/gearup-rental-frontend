@@ -18,7 +18,9 @@ import { getGearImage } from "@/lib/gear-images";
 import { getGearItemById } from "@/service/gear-items/getById";
 import { getAllGearItems } from "@/service/gear-items/getAll";
 import { getAllCategories } from "@/service/category/getAll";
+import { getMe } from "@/service/auth/getMe";
 import GearCard from "../_components/GearCard/GearCard";
+import BookingFlow from "./_components/BookingFlow/BookingFlow";
 import type { GearItem } from "../page";
 
 interface RawGearItem {
@@ -41,14 +43,23 @@ export default async function GearDetailsPage({
 }) {
   const { id } = await params;
 
-  const [gearResult, allGearsResult, categoriesResult] = await Promise.all([
-    getGearItemById(id),
-    getAllGearItems({ limit: 100 }),
-    getAllCategories(),
-  ]);
+  const [gearResult, allGearsResult, categoriesResult, userResult] =
+    await Promise.all([
+      getGearItemById(id),
+      getAllGearItems({ limit: 100 }),
+      getAllCategories(),
+      getMe(),
+    ]);
 
   const rawGear = gearResult?.data as RawGearItem | undefined;
   if (!rawGear || !rawGear.id) notFound();
+
+  const currentUser = userResult?.data as
+    | { role?: string; id?: string }
+    | null
+    | undefined;
+  const canBook =
+    !!currentUser && currentUser.role === "CUSTOMER";
 
   const categories: { id: string; name: string }[] = categoriesResult?.data || [];
 
@@ -66,7 +77,7 @@ export default async function GearDetailsPage({
       categories.find((c) => c.id === rawGear.categoryId)?.name,
   };
 
-  const related = ((allGearsResult?.data as RawGearItem[] | undefined) || [])
+  const relatedItems = ((allGearsResult?.data as RawGearItem[] | undefined) || [])
     .map((raw) => ({
       id: raw?.id ?? raw?._id ?? "",
       title: raw?.title ?? "Untitled Gear",
@@ -80,13 +91,17 @@ export default async function GearDetailsPage({
         raw?.categoryName ||
         categories.find((c) => c.id === raw?.categoryId)?.name,
     }))
-    .filter((item) => item.id !== gear.id)
-    .filter(
-      (item) =>
-        !gear.categoryName ||
-        (item.categoryName ?? "").toLowerCase() === gear.categoryName.toLowerCase(),
-    )
-    .slice(0, 4);
+    .filter((item) => item.id !== gear.id);
+
+  const sameCategory = relatedItems.filter(
+    (item) =>
+      !!gear.categoryName &&
+      (item.categoryName ?? "").toLowerCase() === gear.categoryName.toLowerCase(),
+  );
+  const otherCategory = relatedItems.filter(
+    (item) => !sameCategory.includes(item),
+  );
+  const related = [...sameCategory, ...otherCategory].slice(0, 4);
 
   const includes = [
     "Free cancellation up to 48 hours before pickup",
@@ -185,11 +200,15 @@ export default async function GearDetailsPage({
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
-              <DynamicActionButton
-                label="Rent Now"
-                href={`/login?redirect=/gear/${gear.id}`}
-                className="h-12 w-full text-base"
-              />
+              {canBook ? (
+                <BookingFlow gear={gear} />
+              ) : (
+                <DynamicActionButton
+                  label="Rent Now"
+                  href={`/login?redirect=/gear/${gear.id}`}
+                  className="h-12 w-full text-base"
+                />
+              )}
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="flex flex-col items-center gap-1 rounded-lg bg-muted/50 py-3">
                   <ShieldCheck className="h-5 w-5 text-emerald-600" />
@@ -244,9 +263,15 @@ export default async function GearDetailsPage({
         <div className="mt-16">
           <div className="mb-8 flex items-end justify-between">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">You may also like</h2>
+              <h2 className="text-2xl font-bold tracking-tight">
+                {sameCategory.length > 0
+                  ? "Related Gear"
+                  : "You may also like"}
+              </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Similar gear in {gear.categoryName || "the same category"}
+                {sameCategory.length > 0
+                  ? `More gear in ${gear.categoryName || "this category"}`
+                  : "Similar gear our users love"}
               </p>
             </div>
             <Link

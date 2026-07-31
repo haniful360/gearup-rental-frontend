@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Dumbbell, ShieldCheck, ArrowRight } from "lucide-react";
@@ -21,8 +21,33 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect");
+
+  const redirectAfterLogin = (role?: string) => {
+    if (redirectTo && redirectTo.startsWith("/")) {
+      router.push(redirectTo);
+      return;
+    }
+
+    if (role === "ADMIN") {
+      router.push("/dashboard/admin");
+    } else if (role === "PROVIDER") {
+      router.push("/dashboard/provider");
+    } else {
+      router.push("/dashboard/customer");
+    }
+  };
 
   const {
     control,
@@ -49,13 +74,7 @@ export default function LoginPage() {
 
       const role = result.data?.user?.role;
 
-      if (role === "ADMIN") {
-        router.push("/dashboard/admin");
-      } else if (role === "PROVIDER") {
-        router.push("/dashboard/provider");
-      } else {
-        router.push("/dashboard/customer");
-      }
+      redirectAfterLogin(role);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Something went wrong!";
