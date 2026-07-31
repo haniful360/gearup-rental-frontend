@@ -2,14 +2,14 @@
 
 import { apiPatch } from "../fetchClient"
 
-interface UpdateGearItemPayload {
-  name?: string;
+export interface UpdateGearItemPayload {
+  title?: string;
   description?: string;
-  price?: number;
-  category?: string;
+  pricePerDay?: number;
   location?: string;
-  images?: string[];
-  availability?: { startDate: string; endDate: string };
+  brand?: string;
+  stock?: number;
+  categoryId?: string;
 }
 
 export const updateGearItem = async (

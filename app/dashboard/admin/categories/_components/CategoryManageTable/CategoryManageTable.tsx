@@ -8,13 +8,6 @@ import { Button } from '@/components/ui/button';
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
 import DynamicPageHeader from '@/components/dashboard/DynamicPageHeader/DynamicPageHeader';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
-import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogHeader,
@@ -24,70 +17,27 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { createCategory } from '@/service/category/create';
-import { updateCategory } from '@/service/category/update';
 import { deleteCategory } from '@/service/category/delete';
-import type { Category } from './page';
+import CategoryFormDialog from '../CreateCategory/CreateCategory';
+import { Category } from '../../page';
+
 
 export default function CategoriesClient({ initialCategories }: { initialCategories: Category[] }) {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [formData, setFormData] = useState({ name: '', description: '' });
-  const [saving, setSaving] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Category | null>(null);
 
-  const resetForm = useCallback(() => {
-    setFormData({ name: '', description: '' });
-    setEditingCategory(null);
-  }, []);
-
   const openCreate = useCallback(() => {
-    resetForm();
+    setEditingCategory(null);
     setDialogOpen(true);
-  }, [resetForm]);
+  }, []);
 
   const openEdit = useCallback((cat: Category) => {
     setEditingCategory(cat);
-    setFormData({ name: cat.name, description: cat.description });
     setDialogOpen(true);
   }, []);
-
-  const handleSave = async () => {
-    if (!formData.name.trim()) {
-      toast.error('Category name is required');
-      return;
-    }
-    setSaving(true);
-    try {
-      if (editingCategory) {
-        const result = await updateCategory(editingCategory.id, formData);
-        if (!result.success) {
-          toast.error(result.message || 'Failed to update category');
-          return;
-        }
-        toast.success('Category updated successfully');
-      } else {
-        const result = await createCategory(formData);
-        if (!result.success) {
-          toast.error(result.message || 'Failed to create category');
-          return;
-        }
-        toast.success('Category created successfully');
-      }
-      setDialogOpen(false);
-      resetForm();
-      router.refresh();
-    } catch {
-      toast.error('Something went wrong');
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
@@ -162,51 +112,11 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
         <CustomTable columns={columns} data={categories} />
       </div>
 
-      <Dialog open={dialogOpen} onOpenChange={(open) => { if (!open) { setDialogOpen(false); resetForm(); } }}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editingCategory ? 'Edit Category' : 'Add Category'}</DialogTitle>
-            <DialogDescription>
-              {editingCategory ? 'Update the category details below.' : 'Fill in the details to create a new category.'}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="flex flex-col gap-5 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name <span className="text-rose-500">*</span></Label>
-              <Input
-                id="name"
-                placeholder="e.g. Camping & Hiking"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                placeholder="Brief description of this category"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={4}
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3 border-t pt-4">
-            <Button variant="outline" onClick={() => { setDialogOpen(false); resetForm(); }}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              {saving ? 'Saving...' : editingCategory ? 'Update Category' : 'Create Category'}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <CategoryFormDialog
+        open={dialogOpen}
+        onOpenChange={(open) => { if (!open) setDialogOpen(false); }}
+        editingCategory={editingCategory}
+      />
 
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
         <AlertDialogContent>

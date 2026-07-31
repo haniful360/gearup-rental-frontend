@@ -1,5 +1,6 @@
 import { getAllCategories } from "@/service/category/getAll";
-import CategoriesClient from "./CategoriesClient";
+import CategoriesClient from "./_components/CategoryManageTable/CategoryManageTable";
+
 
 export type Category = {
   id: string;

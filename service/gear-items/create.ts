@@ -2,14 +2,14 @@
 
 import { apiPost } from "../fetchClient"
 
-interface CreateGearItemPayload {
-  name: string;
+export interface CreateGearItemPayload {
+  title: string;
   description: string;
-  price: number;
-  category: string;
+  pricePerDay: number;
   location: string;
-  images: string[];
-  availability?: { startDate: string; endDate: string };
+  brand: string;
+  stock: number;
+  categoryId: string;
 }
 
 export const createGearItem = async (payload: CreateGearItemPayload) => {

@@ -1,8 +1,15 @@
-export default function ProviderInventoryPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold">My Inventory</h1>
-      <p className="text-muted-foreground">Manage your gear inventory.</p>
-    </div>
-  );
+import { getAllGearItems } from "@/service/gear-items/getAll";
+import { getAllCategories } from "@/service/category/getAll";
+import InventoryClient from "./_components/InventoryClient";
+
+export default async function ProviderInventoryPage() {
+  const [gearResult, catResult] = await Promise.all([
+    getAllGearItems(),
+    getAllCategories(),
+  ]);
+
+  const items = gearResult?.data || [];
+  const categories = catResult?.data || [];
+
+  return <InventoryClient initialItems={items} categories={categories} />;
 }

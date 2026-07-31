@@ -41,11 +41,12 @@ const SelectField = <T extends FieldValues>({
   });
 
   const safeValue = value === undefined || value === null ? '' : String(value);
+  const selectedLabel = options.find((o) => o.value === safeValue)?.label;
 
   return (
-    <div className="space-y-2">
-      <Label className="block text-xs font-medium text-[#9CA3AF]">
-        {label} {required && <span className="text-error">*</span>}
+    <div className="space-y-1.5">
+      <Label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+        {label} {required && <span className="text-rose-500">*</span>}
       </Label>
 
       <Select
@@ -56,24 +57,32 @@ const SelectField = <T extends FieldValues>({
       >
         <SelectTrigger
           className={cn(
-            'focus-visible:border-primary/60 h-auto w-full p-3 py-6 text-white shadow-none transition-all focus-visible:ring-0',
+            'h-11 w-full rounded-lg px-3.5 text-sm shadow-none transition-all duration-200',
+            'bg-zinc-50 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800',
+            'text-zinc-900 dark:text-zinc-100',
+            'focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/20 focus-visible:ring-offset-0 data-placeholder:text-zinc-400 dark:data-placeholder:text-zinc-500',
             {
-              'border-error': error,
-              'border-primary/10': !error,
-              'cursor-pointer bg-[#0E182B]': !readOnly,
-              'cursor-default bg-[#0E182B] opacity-60': readOnly,
+              'cursor-not-allowed bg-zinc-100 dark:bg-zinc-900 opacity-70': readOnly,
+              'border-rose-500 focus-visible:border-rose-500 focus-visible:ring-rose-500/20': error,
+              'cursor-pointer': !readOnly,
             },
           )}
         >
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={placeholder}>
+            {selectedLabel && <span>{selectedLabel}</span>}
+          </SelectValue>
         </SelectTrigger>
-        <SelectContent className="bg-[#0E182B] text-white">
+        <SelectContent
+          className={cn(
+            'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100',
+          )}
+        >
           <div style={maxHeight ? { maxHeight, overflowY: 'auto' } : undefined}>
             {options.map((opt) => (
               <SelectItem
                 key={opt.value}
                 value={opt.value}
-                className="hover:bg-primary/20! cursor-pointer hover:text-white!"
+                className="hover:bg-zinc-200 dark:hover:bg-zinc-800 cursor-pointer focus:bg-zinc-200 dark:focus:bg-zinc-800"
               >
                 {opt.label}
               </SelectItem>
@@ -81,7 +90,7 @@ const SelectField = <T extends FieldValues>({
           </div>
         </SelectContent>
       </Select>
-      {error && <p className="text-error mt-1 text-xs">{error}</p>}
+      {error && <p className="text-rose-500 mt-1 text-xs font-medium tracking-tight">{error}</p>}
     </div>
   );
 };
