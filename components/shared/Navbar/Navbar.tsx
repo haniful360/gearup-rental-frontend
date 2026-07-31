@@ -99,7 +99,7 @@ export function Navbar({ user }: NavbarProps) {
             Explore Gear
           </Link>
           <Link
-            href="/categories"
+            href="/#categories"
             className="text-muted-foreground hover:text-emerald-600 transition-colors"
           >
             Categories
@@ -238,7 +238,7 @@ export function Navbar({ user }: NavbarProps) {
                     Explore Gear
                   </Link>
                   <Link
-                    href="/categories"
+                    href="/#categories"
                     className="p-2 rounded-md hover:bg-muted transition-colors"
                   >
                     Categories

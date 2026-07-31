@@ -1,6 +1,20 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Compass, Tag } from "lucide-react";
+import {
+  Compass,
+  Tag,
+  Tent,
+  Mountain,
+  Bike,
+  Waves,
+  Snowflake,
+  Fish,
+  Trees,
+  Camera,
+  Sun,
+  Flame,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 const gradients = [
   "from-emerald-500/20 to-emerald-600/10",
@@ -30,9 +44,31 @@ interface Category {
   description?: string;
 }
 
+const iconMap: { keywords: string[]; icon: LucideIcon }[] = [
+  { keywords: ["camp", "tent"], icon: Tent },
+  { keywords: ["hik", "trek", "backpack", "mountain"], icon: Mountain },
+  { keywords: ["cycl", "bike", "mtb"], icon: Bike },
+  { keywords: ["water", "kayak", "canoe", "surf", "boat", "raft"], icon: Waves },
+  { keywords: ["winter", "snow", "ski", "ice"], icon: Snowflake },
+  { keywords: ["climb", "rock"], icon: Mountain },
+  { keywords: ["fish"], icon: Fish },
+  { keywords: ["forest", "tree", "jungle"], icon: Trees },
+  { keywords: ["photo", "camera"], icon: Camera },
+  { keywords: ["beach", "sun", "summer"], icon: Sun },
+  { keywords: ["campfire", "fire"], icon: Flame },
+];
+
+function getCategoryIcon(name: string): LucideIcon {
+  const key = name.toLowerCase();
+  const match = iconMap.find((entry) =>
+    entry.keywords.some((keyword) => key.includes(keyword)),
+  );
+  return match?.icon ?? Tag;
+}
+
 export function PopularCategories({ categories }: { categories: Category[] }) {
   return (
-    <section className="bg-muted/30 py-20 md:py-28">
+    <section id="categories" className="scroll-mt-20 bg-muted/30 py-20 md:py-28">
       <div className="container mx-auto px-4">
         <div className="flex items-end justify-between mb-10">
           <div className="space-y-3">
@@ -49,26 +85,35 @@ export function PopularCategories({ categories }: { categories: Category[] }) {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {categories.map((cat, idx) => (
-            <Link
-              key={cat.id}
-              href={`/gear?category=${cat.id}`}
-              className="group relative overflow-hidden rounded-2xl border bg-card p-5 hover:border-emerald-500/50 transition-all shadow-sm hover:shadow-md"
-            >
-              <div className={`absolute inset-0 bg-linear-to-b ${gradients[idx % gradients.length]} opacity-0 group-hover:opacity-100 transition-opacity`} />
-              <div className="relative">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${categoryColors[idx % categoryColors.length].bg}`}>
-                  <Tag className={`h-5 w-5 ${categoryColors[idx % categoryColors.length].text}`} />
-                </div>
-                <h3 className="font-semibold mt-3 text-sm">{cat.name}</h3>
-                {cat.description && (
-                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">{cat.description}</p>
-                )}
-              </div>
-            </Link>
-          ))}
-        </div>
+        {categories.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((cat, idx) => {
+              const Icon = getCategoryIcon(cat.name);
+              return (
+                <Link
+                  key={cat.id}
+                  href={`/gear?category=${encodeURIComponent(cat.name)}`}
+                  className="group relative overflow-hidden rounded-2xl border bg-card p-5 hover:border-emerald-500/50 transition-all shadow-sm hover:shadow-md"
+                >
+                  <div className={`absolute inset-0 bg-linear-to-b ${gradients[idx % gradients.length]} opacity-0 group-hover:opacity-100 transition-opacity`} />
+                  <div className="relative">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${categoryColors[idx % categoryColors.length].bg}`}>
+                      <Icon className={`h-5 w-5 ${categoryColors[idx % categoryColors.length].text}`} />
+                    </div>
+                    <h3 className="font-semibold mt-3 text-sm">{cat.name}</h3>
+                    {cat.description && (
+                      <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">{cat.description}</p>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed bg-card p-10 text-center text-sm text-muted-foreground">
+            No categories available yet. Check back soon.
+          </div>
+        )}
       </div>
     </section>
   );
