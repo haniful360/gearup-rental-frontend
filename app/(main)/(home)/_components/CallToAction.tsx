@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 
 export function CallToAction() {
   return (
@@ -15,14 +13,18 @@ export function CallToAction() {
             Join thousands of users who are already renting and listing gear on GearUp.
           </p>
           <div className="flex flex-wrap justify-center gap-4 pt-2">
-            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 text-base h-12 px-8" asChild>
-              <Link href="/register">
-                Get Started Free <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 text-base h-12 px-8" asChild>
-              <Link href="/gear">Explore Gear</Link>
-            </Button>
+            <DynamicActionButton
+              label="Get Started Free"
+              href="/register"
+              showIcon
+              className="h-12 px-8 text-base"
+            />
+            <DynamicActionButton
+              label="Explore Gear"
+              href="/gear"
+              variant="outline"
+              className="h-12 border-zinc-700 px-8 text-base text-zinc-300 hover:bg-zinc-800"
+            />
           </div>
         </div>
       </div>

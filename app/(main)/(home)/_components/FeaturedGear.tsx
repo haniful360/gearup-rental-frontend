@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 import { TrendingUp } from "lucide-react";
 
 const gearItems = [
@@ -30,7 +30,11 @@ export function FeaturedGear() {
                 <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                   ${item.price}<span className="text-xs font-normal text-muted-foreground">/{item.period}</span>
                 </p>
-                <Button size="sm" variant="outline" className="h-8 text-xs">Rent Now</Button>
+                <DynamicActionButton
+                  label="Rent Now"
+                  variant="outline"
+                  className="h-9 text-xs"
+                />
               </div>
             </div>
           </div>

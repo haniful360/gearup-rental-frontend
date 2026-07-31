@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -200,16 +201,17 @@ export function Navbar({ user }: NavbarProps) {
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/login">Log in</Link>
-              </Button>
-              <Button
-                size="sm"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                asChild
-              >
-                <Link href="/register">Get Started</Link>
-              </Button>
+              <DynamicActionButton
+                label="Log in"
+                href="/login"
+                variant="outline"
+                className="h-9 px-4 text-sm"
+              />
+              <DynamicActionButton
+                label="Get Started"
+                href="/register"
+                className="h-9 px-4 text-sm"
+              />
             </div>
           )}
 

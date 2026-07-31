@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import {
   Dialog,
   DialogContent,
@@ -68,9 +68,11 @@ export default function ViewGearItem({
         </div>
 
         <div className="flex justify-end border-t pt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
-          </Button>
+          <DynamicActionButton
+            label="Close"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          />
         </div>
       </DialogContent>
     </Dialog>

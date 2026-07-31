@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 import { Dumbbell, ShieldCheck, Truck, Clock, Heart } from "lucide-react";
 
 export function Footer() {
@@ -81,9 +81,7 @@ export function Footer() {
                   placeholder="Enter your email"
                   className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-500 focus-visible:ring-emerald-500"
                 />
-                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0">
-                  Subscribe
-                </Button>
+                <DynamicActionButton label="Subscribe" className="shrink-0" />
               </div>
             </div>
           </div>

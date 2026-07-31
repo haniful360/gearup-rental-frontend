@@ -12,7 +12,7 @@ import {
   Clock,
   CheckCircle2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 import { Badge } from "@/components/ui/badge";
 import { getGearImage } from "@/lib/gear-images";
 import { getGearItemById } from "@/service/gear-items/getById";
@@ -185,15 +185,11 @@ export default async function GearDetailsPage({
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
-              <Button
-                size="lg"
-                asChild
-                className="h-12 w-full bg-emerald-600 text-white hover:bg-emerald-700 text-base"
-              >
-                <Link href={`/login?redirect=/gear/${gear.id}`}>
-                  Rent Now
-                </Link>
-              </Button>
+              <DynamicActionButton
+                label="Rent Now"
+                href={`/login?redirect=/gear/${gear.id}`}
+                className="h-12 w-full text-base"
+              />
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="flex flex-col items-center gap-1 rounded-lg bg-muted/50 py-3">
                   <ShieldCheck className="h-5 w-5 text-emerald-600" />

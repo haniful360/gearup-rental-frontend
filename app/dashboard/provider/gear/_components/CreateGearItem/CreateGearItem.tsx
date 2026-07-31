@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import {
   Dialog,
   DialogContent,
@@ -96,16 +96,17 @@ export default function CreateGearItem({
           <GearItemForm control={control} errors={errors} categories={categories} />
 
           <div className="flex justify-end gap-3 border-t pt-4">
-            <Button variant="outline" type="button" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button
+            <DynamicActionButton
+              label="Cancel"
+              variant="outline"
+              type="button"
+              onClick={handleCancel}
+            />
+            <DynamicActionButton
+              label={isSubmitting ? 'Creating...' : 'Create Gear'}
               type="submit"
-              disabled={isSubmitting}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              {isSubmitting ? 'Creating...' : 'Create Gear'}
-            </Button>
+              isLoading={isSubmitting}
+            />
           </div>
         </form>
       </DialogContent>

@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 import Link from "next/link";
 import {
-  Compass,
   Tag,
   Tent,
   Mountain,
@@ -78,11 +77,13 @@ export function PopularCategories({ categories }: { categories: Category[] }) {
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Popular Categories</h2>
             <p className="text-muted-foreground">Find gear tailored for your next adventure</p>
           </div>
-          <Button variant="ghost" className="hidden sm:flex gap-1 text-emerald-600" asChild>
-            <Link href="/gear">
-              View all <Compass className="h-4 w-4" />
-            </Link>
-          </Button>
+          <DynamicActionButton
+            label="View all"
+            href="/gear"
+            variant="outline"
+            showIcon
+            className="hidden text-emerald-600 dark:text-emerald-400 sm:flex"
+          />
         </div>
 
         {categories.length > 0 ? (

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 import {
   Search,
   CalendarCheck,
@@ -11,10 +11,8 @@ import {
   BadgeCheck,
   MessageSquare,
   Heart,
-  ArrowRight,
   UserPlus,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const steps = [
   {
@@ -76,14 +74,18 @@ export default function HowItWorksPage() {
               simple steps and get back to what matters — your next adventure.
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-4">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 text-base h-12 px-8" asChild>
-                <Link href="/gear">
-                  Explore Gear <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 text-base h-12 px-8" asChild>
-                <Link href="/register">Get Started Free</Link>
-              </Button>
+              <DynamicActionButton
+                label="Explore Gear"
+                href="/gear"
+                showIcon
+                className="h-12 px-8 text-base"
+              />
+              <DynamicActionButton
+                label="Get Started Free"
+                href="/register"
+                variant="outline"
+                className="h-12 border-zinc-700 px-8 text-base text-zinc-300 hover:bg-zinc-800"
+              />
             </div>
           </div>
         </div>
@@ -149,9 +151,12 @@ export default function HowItWorksPage() {
                   );
                 })}
               </div>
-              <Button className="mt-8 w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
-                <Link href="/gear">Start Exploring <ArrowRight className="h-4 w-4" /></Link>
-              </Button>
+              <DynamicActionButton
+                label="Start Exploring"
+                href="/gear"
+                showIcon
+                className="mt-8 w-full"
+              />
             </div>
 
             <div className="rounded-3xl border bg-card p-8 md:p-10 shadow-sm">
@@ -180,9 +185,12 @@ export default function HowItWorksPage() {
                   );
                 })}
               </div>
-              <Button className="mt-8 w-full bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
-                <Link href="/register">List Your Gear <ArrowRight className="h-4 w-4" /></Link>
-              </Button>
+              <DynamicActionButton
+                label="List Your Gear"
+                href="/register"
+                showIcon
+                className="mt-8 w-full"
+              />
             </div>
           </div>
         </div>
@@ -199,14 +207,18 @@ export default function HowItWorksPage() {
               Join thousands of users who are already renting and listing gear on GearUp.
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-2">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 text-base h-12 px-8" asChild>
-                <Link href="/register">
-                  Get Started Free <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 text-base h-12 px-8" asChild>
-                <Link href="/gear">Explore Gear</Link>
-              </Button>
+              <DynamicActionButton
+                label="Get Started Free"
+                href="/register"
+                showIcon
+                className="h-12 px-8 text-base"
+              />
+              <DynamicActionButton
+                label="Explore Gear"
+                href="/gear"
+                variant="outline"
+                className="h-12 border-zinc-700 px-8 text-base text-zinc-300 hover:bg-zinc-800"
+              />
             </div>
           </div>
         </div>

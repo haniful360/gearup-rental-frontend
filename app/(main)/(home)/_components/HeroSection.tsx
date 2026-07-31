@@ -1,6 +1,5 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowRight, Zap } from "lucide-react";
+import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
+import { Zap } from "lucide-react";
 
 export function HeroSection() {
   return (
@@ -23,14 +22,18 @@ export function HeroSection() {
             Explore premium kayaks, camping tents, mountain bikes, and winter gear from verified local providers. No buying, just renting.
           </p>
           <div className="flex flex-wrap justify-center gap-4 pt-4">
-            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 text-base h-12 px-8" asChild>
-              <Link href="/gear">
-                Browse All Gear <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 text-base h-12 px-8" asChild>
-              <Link href="/register">List Your Gear</Link>
-            </Button>
+            <DynamicActionButton
+              label="Browse All Gear"
+              href="/gear"
+              showIcon
+              className="h-12 px-8 text-base"
+            />
+            <DynamicActionButton
+              label="List Your Gear"
+              href="/register"
+              variant="outline"
+              className="h-12 border-zinc-700 px-8 text-base text-zinc-300 hover:bg-zinc-800"
+            />
           </div>
         </div>
       </div>
