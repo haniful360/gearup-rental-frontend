@@ -91,27 +91,33 @@ export function Navbar({ user }: NavbarProps) {
           />
         </div>
 
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
-          <Link
-            href="/gear"
-            className="flex items-center gap-1.5 text-muted-foreground hover:text-emerald-600 transition-colors"
-          >
-            <Compass className="h-4 w-4" />
-            Explore Gear
-          </Link>
-          <Link
-            href="/#categories"
-            className="text-muted-foreground hover:text-emerald-600 transition-colors"
-          >
-            Categories
-          </Link>
-          <Link
-            href="/how-it-works"
-            className="text-muted-foreground hover:text-emerald-600 transition-colors"
-          >
-            How it Works
-          </Link>
-        </nav>
+<nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
+           <Link
+             href="/gear"
+             className="flex items-center gap-1.5 text-muted-foreground hover:text-emerald-600 transition-colors"
+           >
+             <Compass className="h-4 w-4" />
+             Explore Gear
+           </Link>
+           <Link
+             href="/#categories"
+             className="text-muted-foreground hover:text-emerald-600 transition-colors"
+           >
+             Categories
+           </Link>
+           <Link
+             href="/how-it-works"
+             className="text-muted-foreground hover:text-emerald-600 transition-colors"
+           >
+             How it Works
+           </Link>
+           <Link
+             href="/contact"
+             className="text-muted-foreground hover:text-emerald-600 transition-colors"
+           >
+             Contact
+           </Link>
+         </nav>
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
@@ -232,34 +238,40 @@ export function Navbar({ user }: NavbarProps) {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Search gear..." className="pl-9" />
                 </div>
-                <nav className="flex flex-col gap-2 font-medium">
-                  <Link
-                    href="/gear"
-                    className="p-2 rounded-md hover:bg-muted transition-colors"
-                  >
-                    Explore Gear
-                  </Link>
-                  <Link
-                    href="/#categories"
-                    className="p-2 rounded-md hover:bg-muted transition-colors"
-                  >
-                    Categories
-                  </Link>
-                  <Link
-                    href="/how-it-works"
-                    className="p-2 rounded-md hover:bg-muted transition-colors"
-                  >
-                    How it Works
-                  </Link>
-                  {isLoggedIn && (
-                    <Link
-                      href={`/dashboard/${userRole.toLowerCase()}`}
-                      className="p-2 rounded-md bg-emerald-50 text-emerald-700 font-semibold dark:bg-emerald-950 dark:text-emerald-400"
-                    >
-                      My Dashboard
-                    </Link>
-                  )}
-                </nav>
+<nav className="flex flex-col gap-2 font-medium">
+                   <Link
+                     href="/gear"
+                     className="p-2 rounded-md hover:bg-muted transition-colors"
+                   >
+                     Explore Gear
+                   </Link>
+                   <Link
+                     href="/#categories"
+                     className="p-2 rounded-md hover:bg-muted transition-colors"
+                   >
+                     Categories
+                   </Link>
+                   <Link
+                     href="/how-it-works"
+                     className="p-2 rounded-md hover:bg-muted transition-colors"
+                   >
+                     How it Works
+                   </Link>
+                   <Link
+                     href="/contact"
+                     className="p-2 rounded-md hover:bg-muted transition-colors"
+                   >
+                     Contact
+                   </Link>
+                   {isLoggedIn && (
+                     <Link
+                       href={`/dashboard/${userRole.toLowerCase()}`}
+                       className="p-2 rounded-md bg-emerald-50 text-emerald-700 font-semibold dark:bg-emerald-950 dark:text-emerald-400"
+                     >
+                       My Dashboard
+                     </Link>
+                   )}
+                 </nav>
               </div>
             </SheetContent>
           </Sheet>
