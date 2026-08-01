@@ -115,10 +115,7 @@ export default async function GearDetailsPage({
       !!gear.categoryName &&
       (item.categoryName ?? "").toLowerCase() === gear.categoryName.toLowerCase(),
   );
-  const otherCategory = relatedItems.filter(
-    (item) => !sameCategory.includes(item),
-  );
-  const related = [...sameCategory, ...otherCategory].slice(0, 4);
+  const related = sameCategory.slice(0, 4);
 
   const includes = [
     "Free cancellation up to 48 hours before pickup",
@@ -286,15 +283,9 @@ export default async function GearDetailsPage({
         <div className="mt-16">
           <div className="mb-8 flex items-end justify-between">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">
-                {sameCategory.length > 0
-                  ? "Related Gear"
-                  : "You may also like"}
-              </h2>
+              <h2 className="text-2xl font-bold tracking-tight">Related Gear</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                {sameCategory.length > 0
-                  ? `More gear in ${gear.categoryName || "this category"}`
-                  : "Similar gear our users love"}
+                More gear in {gear.categoryName || "this category"}
               </p>
             </div>
             <Link
