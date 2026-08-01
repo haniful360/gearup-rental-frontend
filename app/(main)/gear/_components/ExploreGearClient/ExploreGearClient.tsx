@@ -50,6 +50,7 @@ export default function ExploreGearClient({
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<GearFiltersState>(() => ({
     ...EMPTY_FILTERS,
+    search: searchParams.get("search") ?? "",
     category: resolveCategorySeed(
       searchParams.get("category") ?? initialCategory,
       categories,

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 
 interface InputFieldProps<T extends FieldValues> {
@@ -18,6 +18,8 @@ interface InputFieldProps<T extends FieldValues> {
   required?: boolean;
   readOnly?: boolean;
   className?: string;
+  leftIcon?: ReactNode;
+  hideLabel?: boolean;
 }
 
 const InputField = <T extends FieldValues>({
@@ -30,6 +32,8 @@ const InputField = <T extends FieldValues>({
   required = false,
   readOnly = false,
   className,
+  leftIcon,
+  hideLabel = false,
 }: InputFieldProps<T>) => {
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -44,11 +48,18 @@ const InputField = <T extends FieldValues>({
 
   return (
     <div className="space-y-1.5">
-      <Label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-        {label} {required && <span className="text-rose-500">*</span>}
-      </Label>
+      {!hideLabel && (
+        <Label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+          {label} {required && <span className="text-rose-500">*</span>}
+        </Label>
+      )}
 
       <div className="relative">
+        {leftIcon && (
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            {leftIcon}
+          </span>
+        )}
         <Input
           type={inputType}
           placeholder={placeholder}
@@ -73,6 +84,7 @@ const InputField = <T extends FieldValues>({
               "border-rose-500 focus-visible:border-rose-500 focus-visible:ring-rose-500/20":
                 error,
               "cursor-pointer": !readOnly && isDate,
+              "pl-9": leftIcon,
             },
             className,
           )}

@@ -3,9 +3,10 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
-import { Input } from "@/components/ui/input";
+import InputField from "@/components/dashboard/Fields/InputField/InputField";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -56,6 +57,10 @@ export function Navbar({ user }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const {
+    control: searchControl,
+    handleSubmit: handleSearchSubmit,
+  } = useForm<{ search: string }>({ defaultValues: { search: "" } });
 
   useClickAway(menuRef, () => setMenuOpen(false));
 
@@ -65,6 +70,11 @@ export function Navbar({ user }: NavbarProps) {
     setMenuOpen(false);
     router.push("/");
     router.refresh();
+  };
+
+  const handleSearch = ({ search }: { search: string }) => {
+    const query = search.trim();
+    router.push(query ? `/gear?search=${encodeURIComponent(query)}` : "/gear");
   };
 
   return (
@@ -82,14 +92,21 @@ export function Navbar({ user }: NavbarProps) {
           </span>
         </Link>
 
-        <div className="hidden md:flex relative max-w-md w-full mx-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
+        <form
+          onSubmit={handleSearchSubmit(handleSearch)}
+          className="hidden md:flex relative max-w-md w-full mx-6"
+        >
+          <InputField
+            label="Search gear"
+            hideLabel
+            name="search"
+            control={searchControl}
             type="search"
             placeholder="Search kayaks, tents, bikes, climbing gear..."
-            className="pl-9 bg-muted border-border focus-visible:ring-emerald-500 rounded-full"
+            className="pl-9 h-9 bg-muted border-border focus-visible:ring-emerald-500 rounded-full"
+            leftIcon={<Search className="h-4 w-4 text-muted-foreground" />}
           />
-        </div>
+        </form>
 
 <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
            <Link
@@ -232,10 +249,18 @@ export function Navbar({ user }: NavbarProps) {
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4 mt-6">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search gear..." className="pl-9" />
-                </div>
+                <form onSubmit={handleSearchSubmit(handleSearch)} className="relative">
+                  <InputField
+                    label="Search gear"
+                    hideLabel
+                    name="search"
+                    control={searchControl}
+                    type="search"
+                    placeholder="Search gear..."
+                    className="pl-9 h-9 bg-muted border-border focus-visible:ring-emerald-500 rounded-full"
+                    leftIcon={<Search className="h-4 w-4 text-muted-foreground" />}
+                  />
+                </form>
 <nav className="flex flex-col gap-2 font-medium">
                    <Link
                      href="/gear"
