@@ -1,8 +1,28 @@
-export default function ProviderOrdersPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold">Incoming Orders</h1>
-      <p className="text-muted-foreground">View and manage incoming rental orders.</p>
-    </div>
-  );
+import { getProviderOrders } from "@/service/provider-order/getOrders";
+import ProviderOrdersTable from "./_components/ProviderOrdersTable/ProviderOrdersTable";
+
+export interface ProviderOrder {
+  id?: string;
+  startDate?: string;
+  endDate?: string;
+  totalPrice?: number;
+  quantity?: number;
+  status?: string;
+  paymentStatus?: string;
+  createdAt?: string;
+  gearItem?: {
+    id?: string;
+    title?: string;
+    location?: string;
+    brand?: string;
+    pricePerDay?: number;
+  };
+  customer?: { id?: string; name?: string; email?: string };
+}
+
+export default async function ProviderOrdersPage() {
+  const result = await getProviderOrders({ limit: 100 });
+  const orders: ProviderOrder[] = result?.data || [];
+
+  return <ProviderOrdersTable initialOrders={orders} />;
 }
