@@ -61,11 +61,11 @@ export const providerRoutes = [
     url: "/dashboard/provider/gear",
     icon: Package,
   },
-  {
-    title: "Add New Gear",
-    url: "/dashboard/provider/gear/new",
-    icon: PlusCircle,
-  },
+  // {
+  //   title: "Add New Gear",
+  //   url: "/dashboard/provider/gear/new",
+  //   icon: PlusCircle,
+  // },
   {
     title: "Incoming Orders",
     url: "/dashboard/provider/orders",

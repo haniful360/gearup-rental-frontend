@@ -19,9 +19,12 @@ import { getGearItemById } from "@/service/gear-items/getById";
 import { getAllGearItems } from "@/service/gear-items/getAll";
 import { getAllCategories } from "@/service/category/getAll";
 import { getMe } from "@/service/auth/getMe";
+import { getReviewsByGearItem } from "@/service/review/getByGearItem";
 import GearCard from "../_components/GearCard/GearCard";
 import BookingFlow from "./_components/BookingFlow/BookingFlow";
+import ReviewsSection from "./_components/ReviewsSection/ReviewsSection";
 import type { GearItem } from "../page";
+import type { Review } from "@/types/review.types";
 
 interface RawGearItem {
   id?: string;
@@ -42,16 +45,31 @@ export default async function GearDetailsPage({
 }) {
   const { id } = await params;
 
-  const [gearResult, allGearsResult, categoriesResult, userResult] =
+  const [gearResult, allGearsResult, categoriesResult, userResult, reviewsResult] =
     await Promise.all([
       getGearItemById(id),
       getAllGearItems({ limit: 100 }),
       getAllCategories(),
       getMe(),
+      getReviewsByGearItem(id),
     ]);
 
   const rawGear = gearResult?.data as RawGearItem | undefined;
   if (!rawGear || !rawGear.id) notFound();
+
+  const reviews: Review[] = ((reviewsResult?.data as Review[] | undefined) ?? [])
+    .filter((review) => review && (review.comment || review.rating))
+    .map((review) => ({
+      ...review,
+      rating: Number(review.rating ?? 0),
+    }));
+
+  const reviewCount = reviews.length;
+  const averageRating =
+    reviewCount > 0
+      ? reviews.reduce((sum, review) => sum + Number(review.rating ?? 0), 0) /
+        reviewCount
+      : 0;
 
   const currentUser = userResult?.data as
     | { role?: string; id?: string }
@@ -150,7 +168,11 @@ export default async function GearDetailsPage({
               </Badge>
               <span className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
                 <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                4.8 (128 reviews)
+                {reviewCount > 0
+                  ? `${averageRating.toFixed(1)} (${reviewCount} ${
+                      reviewCount === 1 ? "review" : "reviews"
+                    })`
+                  : "No reviews yet"}
               </span>
             </div>
 
@@ -257,6 +279,8 @@ export default async function GearDetailsPage({
           </ul>
         </div>
       </div>
+
+      <ReviewsSection reviews={reviews} />
 
       {related.length > 0 && (
         <div className="mt-16">
