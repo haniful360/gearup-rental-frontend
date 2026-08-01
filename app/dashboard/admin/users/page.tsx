@@ -1,8 +1,19 @@
-export default function UserManagementPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold">User Management</h1>
-      <p className="text-muted-foreground">Manage platform users.</p>
-    </div>
-  );
+import { getAdminUsers } from "@/service/admin/getUsers";
+import UsersManageTable from "./_components/UsersManageTable/UsersManageTable";
+
+export type AdminUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isSuspended: boolean;
+  suspensionReason?: string | null;
+  createdAt?: string;
+};
+
+export default async function UserManagementPage() {
+  const result = await getAdminUsers();
+  const users: AdminUser[] = result?.data || [];
+
+  return <UsersManageTable initialUsers={users} />;
 }
