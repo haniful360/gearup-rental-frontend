@@ -25,7 +25,6 @@ import type { GearItem } from "../page";
 
 interface RawGearItem {
   id?: string;
-  _id?: string;
   title?: string;
   description?: string;
   pricePerDay?: number;
@@ -79,7 +78,7 @@ export default async function GearDetailsPage({
 
   const relatedItems = ((allGearsResult?.data as RawGearItem[] | undefined) || [])
     .map((raw) => ({
-      id: raw?.id ?? raw?._id ?? "",
+      id: raw?.id ?? "",
       title: raw?.title ?? "Untitled Gear",
       description: raw?.description ?? "",
       pricePerDay: Number(raw?.pricePerDay ?? 0),

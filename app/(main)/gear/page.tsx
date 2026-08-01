@@ -16,7 +16,6 @@ export type GearItem = {
 
 interface RawGearItem {
   id?: string;
-  _id?: string;
   title?: string;
   description?: string;
   pricePerDay?: number;
@@ -45,7 +44,7 @@ export default async function ExploreGearPage({
 
   const categories: Category[] = categoriesResult?.data || [];
   const gears: GearItem[] = (gearsResult?.data || []).map((raw: RawGearItem) => ({
-    id: raw?.id ?? raw?._id ?? "",
+    id: raw?.id ?? "",
     title: raw?.title ?? "Untitled Gear",
     description: raw?.description ?? "",
     pricePerDay: Number(raw?.pricePerDay ?? 0),

@@ -35,6 +35,20 @@ function toISODate(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
+function toDateTimeISO(isoDate: string) {
+  return new Date(`${isoDate}T00:00:00`).toISOString();
+}
+
+function formatDate(value?: string) {
+  if (!value) return "—";
+  const iso = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00` : value;
+  return new Date(iso).toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 function todayISO() {
   return toISODate(new Date());
 }
@@ -56,7 +70,6 @@ function diffDays(start: string, end: string) {
 
 interface OrderResult {
   id?: string;
-  _id?: string;
   startDate?: string;
   endDate?: string;
   quantity?: number;
@@ -98,8 +111,8 @@ export default function BookingFlow({ gear }: BookingFlowProps) {
     try {
       const result = await createRentalOrder({
         gearItemId: gear.id,
-        startDate,
-        endDate,
+        startDate: toDateTimeISO(startDate),
+        endDate: toDateTimeISO(endDate),
         totalPrice,
         quantity,
       });
@@ -121,19 +134,25 @@ export default function BookingFlow({ gear }: BookingFlowProps) {
   };
 
   const handlePayment = async () => {
-    if (!order?.id && !order?._id) {
+    if (!order?.id) {
       toast.info("Booking saved — payment link will be shared by the provider");
       return;
     }
     setIsPaying(true);
     try {
       const result = await createPayment({
-        rentalOrderId: order.id ?? order._id!,
+        rentalOrderId: order.id,
+        redirectUrl: `${window.location.origin}/payment/success`,
       });
       if (!result.success) {
         toast.info(
           result.message || "Payment initiated — you can complete it later",
         );
+        return;
+      }
+      const data = (result?.data ?? {}) as { paymentUrl?: string };
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl;
         return;
       }
       toast.success("Payment initiated successfully");
@@ -333,10 +352,10 @@ export default function BookingFlow({ gear }: BookingFlowProps) {
                   </span>{" "}
                   has been placed successfully.
                 </p>
-                {order?.id || order?._id ? (
+                {order?.id ? (
                   <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
                     <PartyPopper className="h-3.5 w-3.5 text-emerald-600" />
-                    Order #{order.id ?? order._id}
+                    Order #{order.id}
                   </p>
                 ) : null}
               </div>
@@ -345,19 +364,13 @@ export default function BookingFlow({ gear }: BookingFlowProps) {
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Pickup</span>
                   <span className="font-medium">
-                    {new Date(`${order?.startDate ?? startDate}T00:00:00`).toLocaleDateString(
-                      undefined,
-                      { weekday: "short", month: "short", day: "numeric" },
-                    )}
+                    {formatDate(order?.startDate ?? startDate)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Return</span>
                   <span className="font-medium">
-                    {new Date(`${order?.endDate ?? endDate}T00:00:00`).toLocaleDateString(
-                      undefined,
-                      { weekday: "short", month: "short", day: "numeric" },
-                    )}
+                    {formatDate(order?.endDate ?? endDate)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">

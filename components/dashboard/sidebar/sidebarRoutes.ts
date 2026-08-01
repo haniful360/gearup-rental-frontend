@@ -7,7 +7,7 @@ import {
   ClipboardList,
   Users,
   ShieldCheck,
-  // CreditCard,
+  CreditCard,
   Settings,
   Compass,
   FolderTree,
@@ -26,6 +26,11 @@ export const customerRoutes = [
     title: "My Orders",
     url: "/dashboard/customer/orders",
     icon: ShoppingBag,
+  },
+  {
+    title: "Payments",
+    url: "/dashboard/customer/payments",
+    icon: CreditCard,
   },
   {
     title: "Explore Gear",

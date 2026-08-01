@@ -58,9 +58,9 @@ export default function CreateGearItem({
         return;
       }
       toast.success('Gear item created successfully');
-      const created = result?.data as { id?: string; _id?: string } | null | undefined;
+      const created = result?.data as { id?: string } | null | undefined;
       onSaved({
-        id: created?.id ?? created?._id ?? '',
+        id: created?.id ?? '',
         title: data.title,
         description: data.description,
         pricePerDay: data.pricePerDay,
