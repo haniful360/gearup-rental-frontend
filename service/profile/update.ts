@@ -1,6 +1,7 @@
 "use server"
 
-import { apiPut } from "../fetchClient"
+import { updateTag } from "next/cache"
+import { apiPatch } from "../fetchClient"
 
 interface UpdateProfilePayload {
   name?: string
@@ -12,6 +13,11 @@ interface UpdateProfilePayload {
 }
 
 export const updateProfile = async (payload: UpdateProfilePayload) => {
-  const result = await apiPut("/api/profile/update", payload)
+  const result = await apiPatch("/api/profile/update", payload)
+
+  if (result.success) {
+    updateTag("my-profile")
+  }
+
   return result
 }
