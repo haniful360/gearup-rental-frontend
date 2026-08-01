@@ -14,9 +14,10 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import InputField from "@/components/dashboard/Fields/InputField/InputField";
+import TextAreaField from "@/components/dashboard/Fields/TextAreaField/TextAreaField";
 import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
+import { useForm } from "react-hook-form";
 
 const contactMethods = [
   {
@@ -53,12 +54,25 @@ const contactMethods = [
   },
 ];
 
+interface ContactForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 export default function ContactPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<ContactForm>();
+
+  const onSubmit = async (data: ContactForm) => {
     setSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setSubmitting(false);
@@ -161,56 +175,56 @@ export default function ContactPage() {
               </div>
             ) : (
               <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmit(onSubmit)}
                 className="rounded-2xl border bg-card p-6 md:p-8 shadow-sm space-y-5"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium">First Name</label>
-                    <Input
-                      placeholder="John"
-                      required
-                      className="bg-muted border-border focus-visible:ring-emerald-500"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Last Name</label>
-                    <Input
-                      placeholder="Doe"
-                      required
-                      className="bg-muted border-border focus-visible:ring-emerald-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium">Email</label>
-                  <Input
-                    type="email"
-                    placeholder="john@example.com"
+                  <InputField
+                    label="First Name"
+                    name="firstName"
+                    control={control}
+                    placeholder="John"
                     required
-                    className="bg-muted border-border focus-visible:ring-emerald-500"
+                    error={errors.firstName?.message}
+                  />
+                  <InputField
+                    label="Last Name"
+                    name="lastName"
+                    control={control}
+                    placeholder="Doe"
+                    required
+                    error={errors.lastName?.message}
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium">Subject</label>
-                  <Input
-                    placeholder="How can we help?"
-                    required
-                    className="bg-muted border-border focus-visible:ring-emerald-500"
-                  />
-                </div>
+                <InputField
+                  label="Email"
+                  name="email"
+                  control={control}
+                  type="email"
+                  placeholder="john@example.com"
+                  required
+                  error={errors.email?.message}
+                />
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium">Message</label>
-                  <Textarea
-                    placeholder="Tell us more about your inquiry..."
-                    rows={5}
-                    required
-                    className="bg-muted border-border focus-visible:ring-emerald-500 resize-none"
-                  />
-                </div>
+                <InputField
+                  label="Subject"
+                  name="subject"
+                  control={control}
+                  placeholder="How can we help?"
+                  required
+                  error={errors.subject?.message}
+                />
+
+                <TextAreaField
+                  label="Message"
+                  name="message"
+                  control={control}
+                  placeholder="Tell us more about your inquiry..."
+                  rows={5}
+                  required
+                  error={errors.message?.message}
+                />
 
                 <DynamicActionButton
                   label="Send Message"

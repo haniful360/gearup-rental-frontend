@@ -14,8 +14,8 @@ export function ThemeToggle() {
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="text-zinc-400 hover:text-zinc-100"
     >
-      <Sun className="h-4 w-4 scale-100 transition-all dark:scale-0" />
-      <Moon className="absolute h-4 w-4 scale-0 transition-all dark:scale-100" />
+      <Sun className="h-4 w-4 scale-100 transition-all dark:scale-0" suppressHydrationWarning />
+      <Moon className="absolute h-4 w-4 scale-0 transition-all dark:scale-100" suppressHydrationWarning />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
