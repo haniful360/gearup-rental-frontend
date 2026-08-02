@@ -5,7 +5,8 @@ import CategoriesClient from "./_components/CategoryManageTable/CategoryManageTa
 export type Category = {
   id: string;
   name: string;
-  description: string;
+  description?: string;
+  image?: string;
 };
 
 export default async function AdminCategoriesPage() {

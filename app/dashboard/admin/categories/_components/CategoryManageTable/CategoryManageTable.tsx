@@ -2,7 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
@@ -59,6 +60,26 @@ export default function CategoriesClient({ initialCategories }: { initialCategor
 
   const columns = [
     { header: '#', cell: (_: Category, index?: number) => <span className="text-xs">{(index ?? 0) + 1}</span> },
+    {
+      header: 'Image',
+      cell: (row: Category) => (
+        <div className="relative h-10 w-10 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 shrink-0">
+          {row.image ? (
+            <Image
+              src={row.image}
+              alt={row.name}
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-zinc-400">
+              <ImageIcon className="h-4 w-4" />
+            </div>
+          )}
+        </div>
+      ),
+    },
     { header: 'Name', accessor: 'name' as const },
     {
       header: 'Description',

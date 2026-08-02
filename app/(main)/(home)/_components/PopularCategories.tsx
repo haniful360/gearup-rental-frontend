@@ -1,3 +1,4 @@
+import Image from "next/image";
 import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 import Link from "next/link";
 import {
@@ -41,6 +42,7 @@ interface Category {
   id: string;
   name: string;
   description?: string;
+  image?: string;
 }
 
 const iconMap: { keywords: string[]; icon: LucideIcon }[] = [
@@ -98,8 +100,19 @@ export function PopularCategories({ categories }: { categories: Category[] }) {
                 >
                   <div className={`absolute inset-0 bg-linear-to-b ${gradients[idx % gradients.length]} opacity-0 group-hover:opacity-100 transition-opacity`} />
                   <div className="relative">
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${categoryColors[idx % categoryColors.length].bg}`}>
-                      <Icon className={`h-5 w-5 ${categoryColors[idx % categoryColors.length].text}`} />
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg overflow-hidden ${categoryColors[idx % categoryColors.length].bg}`}>
+                      {cat.image ? (
+                        <Image
+                          src={cat.image}
+                          alt={cat.name}
+                          width={40}
+                          height={40}
+                          className="h-full w-full object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <Icon className={`h-5 w-5 ${categoryColors[idx % categoryColors.length].text}`} />
+                      )}
                     </div>
                     <h3 className="font-semibold mt-3 text-sm">{cat.name}</h3>
                     {cat.description && (

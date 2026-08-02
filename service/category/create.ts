@@ -4,7 +4,8 @@ import { apiPost } from "../fetchClient"
 
 interface CreateCategoryPayload {
   name: string
-  description: string
+  description?: string
+  image?: string
 }
 
 export const createCategory = async (payload: CreateCategoryPayload) => {

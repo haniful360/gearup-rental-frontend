@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import TextAreaField from '@/components/dashboard/Fields/TextAreaField/TextAreaField';
+import CloudinarySingleImageUploadField from '@/components/dashboard/Fields/CloudinarySingleImageUploadField/CloudinarySingleImageUploadField';
 import { createCategory } from '@/service/category/create';
 import { updateCategory } from '@/service/category/update';
 import type { Category } from '../../page';
@@ -20,6 +21,7 @@ import type { Category } from '../../page';
 interface CategoryFormValues {
   name: string;
   description: string;
+  image?: string;
 }
 
 interface CategoryFormDialogProps {
@@ -43,6 +45,7 @@ export default function CategoryFormDialog({
     values: {
       name: editingCategory?.name ?? '',
       description: editingCategory?.description ?? '',
+      image: editingCategory?.image ?? '',
     },
   });
 
@@ -64,7 +67,7 @@ export default function CategoryFormDialog({
         toast.success('Category created successfully');
       }
       onOpenChange(false);
-      reset({ name: '', description: '' });
+      reset({ name: '', description: '', image: '' });
       router.refresh();
     } catch {
       toast.error('Something went wrong');
@@ -73,7 +76,7 @@ export default function CategoryFormDialog({
 
   const handleCancel = () => {
     onOpenChange(false);
-    reset({ name: '', description: '' });
+    reset({ name: '', description: '', image: '' });
   };
 
   return (
@@ -102,6 +105,12 @@ export default function CategoryFormDialog({
             placeholder="Brief description of this category"
             rows={4}
             error={errors.description}
+          />
+          <CloudinarySingleImageUploadField
+            label="Category Image"
+            name="image"
+            control={control}
+            error={errors.image}
           />
 
           <div className="flex justify-end gap-3 border-t pt-4">

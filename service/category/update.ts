@@ -5,6 +5,7 @@ import { apiPut } from "../fetchClient"
 interface UpdateCategoryPayload {
   name?: string
   description?: string
+  image?: string
 }
 
 export const updateCategory = async (id: string, payload: UpdateCategoryPayload) => {
