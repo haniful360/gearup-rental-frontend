@@ -11,6 +11,9 @@ export default async function AdminSettingsPage() {
         role?: string;
         profiles?: {
           bio?: string | null;
+          photo?: string | null;
+          avatarUrl?: string | null;
+          image?: string | null;
           phone?: string | null;
           city?: string | null;
           address?: string | null;

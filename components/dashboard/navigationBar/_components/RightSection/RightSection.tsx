@@ -73,10 +73,8 @@ function RightSection({ role }: { role: RoleTypes }) {
   return (
     <div className="flex items-center gap-3">
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger asChild>
-          <button className="text-gray flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border border-gray-800 bg-[#161F2F]/50 transition-all hover:bg-[#161F2F] hover:text-white">
-            <Bell size={20} />
-          </button>
+        <DropdownMenuTrigger className="text-gray flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border border-gray-800 bg-[#161F2F]/50 transition-all hover:bg-[#161F2F] hover:text-white">
+          <Bell size={20} />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="mt-2 w-100 overflow-hidden rounded-md border border-[#1E293B] bg-[#111827] p-0 shadow-xl">

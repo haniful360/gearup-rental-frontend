@@ -21,23 +21,21 @@ export default function UserDropdown() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="group flex cursor-pointer items-center gap-3 rounded-md border-white/5 outline-0! transition-all duration-300 hover:bg-[#111B33]/80 md:border md:bg-[#0F1A2C] md:px-3 md:py-1.5">
-          <Avatar className="size-10 border transition-all duration-300 md:size-9">
-            <AvatarImage
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
-              alt="User Avatar"
-              className="object-cover"
-            />
-            <AvatarFallback className="bg-primary text-xs font-semibold text-white">U</AvatarFallback>
-          </Avatar>
+      <DropdownMenuTrigger className="group flex cursor-pointer items-center gap-3 rounded-md border-white/5 outline-0! transition-all duration-300 hover:bg-[#111B33]/80 md:border md:bg-[#0F1A2C] md:px-3 md:py-1.5">
+        <Avatar className="size-10 border transition-all duration-300 md:size-9">
+          <AvatarImage
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+            alt="User Avatar"
+            className="object-cover"
+          />
+          <AvatarFallback className="bg-primary text-xs font-semibold text-white">U</AvatarFallback>
+        </Avatar>
 
-          <div className="hidden flex-col items-start md:flex">
-            <span className="text-sm leading-none font-semibold text-white">User</span>
-            <span className="text-gray mt-1 text-[10px] font-semibold tracking-widest uppercase">User</span>
-          </div>
-          <ChevronDown className="text-gray hidden h-4 w-4 md:block" />
-        </button>
+        <div className="hidden flex-col items-start md:flex">
+          <span className="text-sm leading-none font-semibold text-white">User</span>
+          <span className="text-gray mt-1 text-[10px] font-semibold tracking-widest uppercase">User</span>
+        </div>
+        <ChevronDown className="text-gray hidden h-4 w-4 md:block" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="rounded-ms animate-in fade-in zoom-in-95 z-100 w-64 border-white/10 bg-[#0F1A2C] p-2 shadow-xl backdrop-blur-xl duration-200"

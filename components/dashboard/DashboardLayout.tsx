@@ -18,7 +18,7 @@ import {
   LayoutDashboard,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { useClickAway } from '@/hooks/use-click-away';
 import { logout } from '@/service/auth/logout';
@@ -29,6 +29,14 @@ interface DashboardUser {
   name: string;
   email: string;
   role: string;
+  photo?: string | null;
+  avatarUrl?: string | null;
+  image?: string | null;
+  profiles?: {
+    photo?: string | null;
+    avatarUrl?: string | null;
+    image?: string | null;
+  } | null;
 }
 
 const roleBadges: Record<string, { label: string; className: string }> = {
@@ -68,6 +76,15 @@ export default function DashboardLayout({
         .join('')
         .toUpperCase()
     : 'U';
+
+  const userPhotoUrl =
+    user.photo ||
+    user.avatarUrl ||
+    user.image ||
+    user.profiles?.photo ||
+    user.profiles?.avatarUrl ||
+    user.profiles?.image ||
+    '';
 
   const handleLogout = async () => {
     await logout();
@@ -119,6 +136,13 @@ export default function DashboardLayout({
               >
                 <div className="relative">
                   <Avatar className="h-8 w-8 ring-2 ring-emerald-500/20">
+                    {userPhotoUrl ? (
+                      <AvatarImage
+                        src={userPhotoUrl}
+                        alt={user.name}
+                        className="object-cover"
+                      />
+                    ) : null}
                     <AvatarFallback className="bg-emerald-600 text-white text-xs font-bold">
                       {initials}
                     </AvatarFallback>
@@ -141,6 +165,13 @@ export default function DashboardLayout({
                 <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-border/80 bg-popover/95 p-2 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in-50 zoom-in-95">
                   <div className="flex items-center gap-3 p-2.5">
                     <Avatar className="h-10 w-10 ring-2 ring-emerald-500/30">
+                      {userPhotoUrl ? (
+                        <AvatarImage
+                          src={userPhotoUrl}
+                          alt={user.name}
+                          className="object-cover"
+                        />
+                      ) : null}
                       <AvatarFallback className="bg-emerald-600 text-white text-sm font-bold">
                         {initials}
                       </AvatarFallback>

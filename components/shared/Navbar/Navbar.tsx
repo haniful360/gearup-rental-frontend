@@ -23,6 +23,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Settings,
 } from "lucide-react";
 import {
   Sheet,
@@ -39,6 +40,9 @@ interface NavbarUser {
   name: string;
   email: string;
   role: "CUSTOMER" | "PROVIDER" | "ADMIN" | null;
+  photo?: string | null;
+  avatarUrl?: string | null;
+  image?: string | null;
 }
 
 interface NavbarProps {
@@ -88,6 +92,14 @@ export function Navbar({ user }: NavbarProps) {
     setSuggestionsOpen(false);
     setActiveIndex(-1);
   });
+
+  const userPhotoUrl =
+    user?.photo ||
+    user?.avatarUrl ||
+    user?.image ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "")}&background=059669&color=fff`;
+
+  const settingsUrl = `/dashboard/${userRole.toLowerCase()}/settings`;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -255,33 +267,33 @@ export function Navbar({ user }: NavbarProps) {
           </form>
         </div>
 
-<nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
-           <Link
-             href="/gear"
-             className="flex items-center gap-1.5 text-muted-foreground hover:text-emerald-600 transition-colors"
-           >
-             <Compass className="h-4 w-4" />
-             Explore Gear
-           </Link>
-           <Link
-             href="/#categories"
-             className="text-muted-foreground hover:text-emerald-600 transition-colors"
-           >
-             Categories
-           </Link>
-           <Link
-             href="/how-it-works"
-             className="text-muted-foreground hover:text-emerald-600 transition-colors"
-           >
-             How it Works
-           </Link>
-           <Link
-             href="/contact"
-             className="text-muted-foreground hover:text-emerald-600 transition-colors"
-           >
-             Contact
-           </Link>
-         </nav>
+        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
+          <Link
+            href="/gear"
+            className="flex items-center gap-1.5 text-muted-foreground hover:text-emerald-600 transition-colors"
+          >
+            <Compass className="h-4 w-4" />
+            Explore Gear
+          </Link>
+          <Link
+            href="/#categories"
+            className="text-muted-foreground hover:text-emerald-600 transition-colors"
+          >
+            Categories
+          </Link>
+          <Link
+            href="/how-it-works"
+            className="text-muted-foreground hover:text-emerald-600 transition-colors"
+          >
+            How it Works
+          </Link>
+          <Link
+            href="/contact"
+            className="text-muted-foreground hover:text-emerald-600 transition-colors"
+          >
+            Contact
+          </Link>
+        </nav>
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
@@ -297,16 +309,16 @@ export function Navbar({ user }: NavbarProps) {
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-emerald-600" />
               </Button>
 
-
               <div ref={menuRef} className="relative">
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="relative h-9 w-9 rounded-full ring-2 ring-emerald-500/20 hover:ring-emerald-500/40 transition-all cursor-pointer"
+                  className="relative h-9 w-9 rounded-full ring-2 ring-emerald-500/20 hover:ring-emerald-500/40 transition-all cursor-pointer overflow-hidden"
                 >
                   <Avatar className="h-9 w-9">
                     <AvatarImage
-                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "")}&background=059669&color=fff`}
+                      src={userPhotoUrl}
                       alt={user?.name || "User"}
+                      className="object-cover"
                     />
                     <AvatarFallback className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
                       {user?.name ? getInitials(user.name) : "GU"}
@@ -315,55 +327,89 @@ export function Navbar({ user }: NavbarProps) {
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border bg-popover p-1 shadow-lg z-50">
-                    <div className="px-2 py-1.5">
-                      <p className="text-sm font-medium leading-none">{user?.name}</p>
-                      <p className="text-xs leading-none text-muted-foreground mt-1">
-                        {user?.email}
-                      </p>
-                      <div className="mt-1.5">
+                  <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-border/80 bg-popover/95 p-2 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in-50 zoom-in-95">
+                    {/* Header */}
+                    <div className="flex items-center gap-3 p-2.5">
+                      <Avatar className="h-10 w-10 ring-2 ring-emerald-500/30 shrink-0">
+                        <AvatarImage
+                          src={userPhotoUrl}
+                          alt={user?.name || "User"}
+                          className="object-cover"
+                        />
+                        <AvatarFallback className="bg-emerald-600 text-white text-sm font-bold">
+                          {user?.name ? getInitials(user.name) : "GU"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold truncate text-foreground leading-tight">
+                          {user?.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate leading-tight mt-0.5">
+                          {user?.email}
+                        </p>
                         <Badge
-                          variant="secondary"
-                          className="bg-emerald-100 text-emerald-800 text-[10px] dark:bg-emerald-900 dark:text-emerald-200"
+                          variant="outline"
+                          className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
                         >
                           {userRole}
                         </Badge>
                       </div>
                     </div>
-                    <div className="my-1 h-px bg-border" />
-                    <Link
-                      href={`/dashboard/${userRole.toLowerCase()}`}
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors"
-                    >
-                      <LayoutDashboard className="h-4 w-4" />
-                      Dashboard
-                    </Link>
-                    {userRole === "CUSTOMER" && (
+
+                    <div className="my-1.5 h-px bg-border/60" />
+
+                    {/* Nav Actions */}
+                    <div className="space-y-0.5">
                       <Link
-                        href="/dashboard/customer"
+                        href={`/dashboard/${userRole.toLowerCase()}`}
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-foreground/80 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                       >
-                        <ShoppingBag className="h-4 w-4" />
-                        My Rentals
+                        <LayoutDashboard className="h-4 w-4 text-emerald-500" />
+                        My Dashboard
                       </Link>
-                    )}
-                    <Link
-                      href="/profile"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors"
-                    >
-                      <User className="h-4 w-4" />
-                      Profile Settings
-                    </Link>
-                    <div className="my-1 h-px bg-border" />
+
+                      {userRole === "CUSTOMER" && (
+                        <Link
+                          href="/dashboard/customer/orders"
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-foreground/80 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                        >
+                          <ShoppingBag className="h-4 w-4 text-emerald-500" />
+                          My Rentals
+                        </Link>
+                      )}
+
+                      {userRole === "PROVIDER" && (
+                        <Link
+                          href="/dashboard/provider/gear"
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-foreground/80 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                        >
+                          <ShoppingBag className="h-4 w-4 text-emerald-500" />
+                          Manage Gear
+                        </Link>
+                      )}
+
+                      <Link
+                        href={settingsUrl}
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-foreground/80 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                      >
+                        <Settings className="h-4 w-4 text-emerald-500" />
+                        Profile Settings
+                      </Link>
+                    </div>
+
+                    <div className="my-1.5 h-px bg-border/60" />
+
+                    {/* Logout */}
                     <button
                       onClick={handleLogout}
-                      className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 transition-colors cursor-pointer"
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-500/10 transition-colors cursor-pointer"
                     >
                       <LogOut className="h-4 w-4" />
-                      Log out
+                      Sign out
                     </button>
                   </div>
                 )}
@@ -419,40 +465,40 @@ export function Navbar({ user }: NavbarProps) {
                     </div>
                   )}
                 </div>
-<nav className="flex flex-col gap-2 font-medium">
-                   <Link
-                     href="/gear"
-                     className="p-2 rounded-md hover:bg-muted transition-colors"
-                   >
-                     Explore Gear
-                   </Link>
-                   <Link
-                     href="/#categories"
-                     className="p-2 rounded-md hover:bg-muted transition-colors"
-                   >
-                     Categories
-                   </Link>
-                   <Link
-                     href="/how-it-works"
-                     className="p-2 rounded-md hover:bg-muted transition-colors"
-                   >
-                     How it Works
-                   </Link>
-                   <Link
-                     href="/contact"
-                     className="p-2 rounded-md hover:bg-muted transition-colors"
-                   >
-                     Contact
-                   </Link>
-                   {isLoggedIn && (
-                     <Link
-                       href={`/dashboard/${userRole.toLowerCase()}`}
-                       className="p-2 rounded-md bg-emerald-50 text-emerald-700 font-semibold dark:bg-emerald-950 dark:text-emerald-400"
-                     >
-                       My Dashboard
-                     </Link>
-                   )}
-                 </nav>
+                <nav className="flex flex-col gap-2 font-medium">
+                  <Link
+                    href="/gear"
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
+                  >
+                    Explore Gear
+                  </Link>
+                  <Link
+                    href="/#categories"
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
+                  >
+                    Categories
+                  </Link>
+                  <Link
+                    href="/how-it-works"
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
+                  >
+                    How it Works
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
+                  >
+                    Contact
+                  </Link>
+                  {isLoggedIn && (
+                    <Link
+                      href={`/dashboard/${userRole.toLowerCase()}`}
+                      className="p-2 rounded-md bg-emerald-50 text-emerald-700 font-semibold dark:bg-emerald-950 dark:text-emerald-400"
+                    >
+                      My Dashboard
+                    </Link>
+                  )}
+                </nav>
               </div>
             </SheetContent>
           </Sheet>

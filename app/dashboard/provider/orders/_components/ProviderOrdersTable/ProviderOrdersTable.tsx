@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -158,19 +159,19 @@ export default function ProviderOrdersTable({
       header: "Actions",
       cell: (row) => (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={updatingId === row.id}
-            >
-              {updatingId === row.id ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <ChevronDown className="h-3.5 w-3.5" />
-              )}
-              Update
-            </Button>
+          <DropdownMenuTrigger
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "gap-1.5 cursor-pointer"
+            )}
+            disabled={updatingId === row.id}
+          >
+            {updatingId === row.id ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5" />
+            )}
+            Update
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" sideOffset={6}>
             {STATUS_OPTIONS.map((status) => (
