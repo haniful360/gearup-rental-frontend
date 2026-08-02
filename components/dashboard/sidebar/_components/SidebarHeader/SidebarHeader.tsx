@@ -1,14 +1,14 @@
 'use client';
 
 import { SidebarHeader, useSidebar } from '@/components/ui/sidebar';
-import { Dumbbell } from 'lucide-react';
+import { Dumbbell, ShieldCheck, UserCheck, Store } from 'lucide-react';
 import Link from 'next/link';
 import { RoleTypes } from '../../sidebarRoutes';
 
-const roleColors: Record<RoleTypes, string> = {
-  CUSTOMER: 'text-blue-400',
-  PROVIDER: 'text-emerald-400',
-  ADMIN: 'text-purple-400',
+const roleIcons: Record<RoleTypes, typeof ShieldCheck> = {
+  CUSTOMER: UserCheck,
+  PROVIDER: Store,
+  ADMIN: ShieldCheck,
 };
 
 const roleBadgeColors: Record<RoleTypes, string> = {
@@ -20,21 +20,30 @@ const roleBadgeColors: Record<RoleTypes, string> = {
 function SidebarHeaderSection({ role }: { role: RoleTypes }) {
   const { state } = useSidebar();
   const isExpanded = state === 'expanded';
+  const RoleIcon = roleIcons[role] || UserCheck;
 
   return (
-    <SidebarHeader className="border-b border-sidebar-border pb-5">
-      <Link href="/" className="flex items-center gap-4 px-6 pt-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 text-white shadow-lg shadow-emerald-500/20 shrink-0">
+    <SidebarHeader className="border-b border-sidebar-border/60 p-3">
+      <Link
+        href="/"
+        className="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-sidebar-accent/50 transition-colors"
+      >
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 text-white shadow-md shadow-emerald-500/25 shrink-0 transition-transform duration-300 hover:scale-105">
           <Dumbbell className="h-5 w-5" />
         </div>
         {isExpanded && (
-          <div className="flex flex-col">
-            <h4 className="text-lg font-bold text-sidebar-foreground leading-tight tracking-tight">
-              Gear<span className="text-emerald-400">Up</span>
+          <div className="flex flex-col min-w-0">
+            <h4 className="text-lg font-bold text-sidebar-foreground tracking-tight leading-none">
+              Gear<span className="text-emerald-500 dark:text-emerald-400">Up</span>
             </h4>
-            <span className={`mt-0.5 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${roleBadgeColors[role]}`}>
-              {role.toLowerCase()} Panel
-            </span>
+            <div className="mt-1 flex items-center gap-1.5">
+              <span
+                className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${roleBadgeColors[role]}`}
+              >
+                <RoleIcon className="h-3 w-3" />
+                {role} Panel
+              </span>
+            </div>
           </div>
         )}
       </Link>
