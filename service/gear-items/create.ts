@@ -1,18 +1,20 @@
 "use server";
 
-import { apiPost } from "../fetchClient"
+import { apiPost } from "../fetchClient";
 
-export interface CreateGearItemPayload {
+export interface IGearItemPayload {
   title: string;
   description: string;
   pricePerDay: number;
   location: string;
   brand: string;
-  stock: number;
+  stock?: number;
+  isFeature?: boolean;
+  images?: string[];
   categoryId: string;
 }
 
-export const createGearItem = async (payload: CreateGearItemPayload) => {
+export const createGearItem = async (payload: IGearItemPayload) => {
   const result = await apiPost("/api/gear-items/create", payload);
   return result;
 };

@@ -10,6 +10,8 @@ export type GearItem = {
   location: string;
   brand: string;
   stock: number;
+  isFeature?: boolean;
+  images?: string[];
   categoryId?: string;
 };
 

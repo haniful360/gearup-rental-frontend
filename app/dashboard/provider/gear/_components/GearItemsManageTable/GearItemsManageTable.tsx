@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Image from 'next/image';
 import { Plus, Eye, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
 import DynamicPageHeader from '@/components/dashboard/DynamicPageHeader/DynamicPageHeader';
 import type { TColumn } from '@/types/custom-table.types';
@@ -55,14 +57,45 @@ export default function GearItemsManageTable({
   const columns: TColumn<GearItem>[] = [
     { header: 'Sl.No', cell: (_, index) => <span>{(index ?? 0) + 1}</span> },
     {
+      header: 'Image',
+      cell: (row) => {
+        const primaryImg = row.images && row.images.length > 0 ? row.images[0] : null;
+        return (
+          <div className="relative h-10 w-10 overflow-hidden rounded-lg border bg-zinc-900 shrink-0">
+            {primaryImg ? (
+              <Image
+                src={primaryImg}
+                alt={row.title}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-[10px] text-zinc-400">
+                No Img
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       header: 'Title',
-      cell: (row) => <span className="font-medium">{row.title.slice(0, 20)}</span>,
+      cell: (row) => (
+        <div className="flex items-center gap-2">
+          <span className="font-medium">{row.title.slice(0, 25)}</span>
+          {row.isFeature && (
+            <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 text-[10px] px-1.5 py-0">
+              Featured
+            </Badge>
+          )}
+        </div>
+      ),
     },
     {
       header: 'Category',
       cell: (row) => <span>{categoryName(row.categoryId)}</span>,
     },
-    // { header: 'Brand', accessor: 'brand' },
     {
       header: 'Price/Day',
       cell: (row) => (

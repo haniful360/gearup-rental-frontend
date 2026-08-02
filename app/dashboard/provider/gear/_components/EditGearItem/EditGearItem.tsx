@@ -37,7 +37,7 @@ export default function EditGearItem({
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<GearFormData>({
+  } = useForm({
     resolver: zodResolver(gearItemSchema),
     values: {
       title: item?.title ?? '',
@@ -46,6 +46,8 @@ export default function EditGearItem({
       location: item?.location ?? '',
       brand: item?.brand ?? '',
       stock: item?.stock ?? 0,
+      isFeature: item?.isFeature ?? false,
+      images: item?.images ?? [],
       categoryId: item?.categoryId ?? '',
     },
   });

@@ -1,6 +1,6 @@
 "use server";
 
-import { apiPatch } from "../fetchClient"
+import { apiPatch } from "../fetchClient";
 
 export interface UpdateGearItemPayload {
   title?: string;
@@ -9,6 +9,8 @@ export interface UpdateGearItemPayload {
   location?: string;
   brand?: string;
   stock?: number;
+  isFeature?: boolean;
+  images?: string[];
   categoryId?: string;
 }
 

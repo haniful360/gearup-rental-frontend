@@ -1,32 +1,37 @@
-import { Control, FieldErrors } from "react-hook-form";
+import { Control, Controller, FieldErrors } from "react-hook-form";
 import { z } from "zod";
 import InputField from "@/components/dashboard/Fields/InputField/InputField";
 import TextAreaField from "@/components/dashboard/Fields/TextAreaField/TextAreaField";
 import SelectField from "@/components/dashboard/Fields/SelectField/SelectField";
+import CloudinaryImageUploadField from "@/components/dashboard/Fields/CloudinaryImageUploadField/CloudinaryImageUploadField";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export const gearItemSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters"),
-  pricePerDay: z
-    .any()
-    .transform((value) => Number(value))
-    .refine((value) => value > 0, "Price per day must be greater than 0"),
+  pricePerDay: z.coerce
+    .number()
+    .min(0.01, "Price per day must be greater than 0"),
   location: z.string().min(2, "Location must be at least 2 characters"),
   brand: z.string().min(1, "Brand is required"),
-  stock: z
-    .any()
-    .transform((value) => Number(value))
-    .refine((value) => value >= 1, "Stock must be at least 1"),
+  stock: z.coerce
+    .number()
+    .min(1, "Stock must be at least 1"),
+  isFeature: z.boolean().optional(),
+  images: z.array(z.string()).optional(),
   categoryId: z.string().min(1, "Please select a category"),
 });
 
-export type GearFormData = z.output<typeof gearItemSchema>;
+export type GearFormData = z.infer<typeof gearItemSchema>;
 
 interface GearItemFormProps {
-  control: Control<GearFormData>;
-  errors: FieldErrors<GearFormData>;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  control: any;
+  errors: any;
+  /* eslint-enable @typescript-eslint/no-explicit-any */
   categories: { id: string; name: string }[];
 }
 
@@ -91,7 +96,7 @@ export function GearItemForm({ control, errors, categories }: GearItemFormProps)
           options={categories.map((c) => ({ value: c.id, label: c.name }))}
           placeholder="Select a category"
           required
-          error={errors.categoryId?.message}
+          error={typeof errors.categoryId?.message === 'string' ? errors.categoryId.message : undefined}
         />
       </div>
 
@@ -103,6 +108,38 @@ export function GearItemForm({ control, errors, categories }: GearItemFormProps)
         required
         error={errors.location}
       />
+
+      <CloudinaryImageUploadField
+        label="Gear Images (Cloudinary)"
+        name="images"
+        control={control}
+        error={errors.images}
+      />
+
+      <div className="flex items-center space-x-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/40 p-3.5">
+        <Controller
+          name="isFeature"
+          control={control}
+          render={({ field }) => (
+            <Checkbox
+              id="isFeature"
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+          )}
+        />
+        <div className="grid gap-1 leading-none">
+          <Label
+            htmlFor="isFeature"
+            className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 cursor-pointer"
+          >
+            Feature this Gear Item
+          </Label>
+          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            Featured items are highlighted on the home page and top of search results.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

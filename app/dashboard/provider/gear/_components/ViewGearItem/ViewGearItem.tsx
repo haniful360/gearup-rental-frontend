@@ -1,6 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import { Badge } from '@/components/ui/badge';
+import { Star } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -28,13 +31,40 @@ export default function ViewGearItem({
 
   return (
     <Dialog open={open} onOpenChange={(open) => { if (!open) onOpenChange(false); }}>
-      <DialogContent>
+      <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{item?.title}</DialogTitle>
+          <div className="flex items-center justify-between gap-3 pr-6">
+            <DialogTitle>{item?.title}</DialogTitle>
+            {item?.isFeature && (
+              <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 flex items-center gap-1 shrink-0">
+                <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
+                Featured
+              </Badge>
+            )}
+          </div>
           <DialogDescription>Gear item details</DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4 py-4">
+        <div className="flex flex-col gap-4 py-3">
+          {item?.images && item.images.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-2">Images</p>
+              <div className="grid grid-cols-4 gap-2">
+                {item.images.map((img, idx) => (
+                  <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border bg-zinc-900">
+                    <Image
+                      src={img}
+                      alt={`${item.title} image ${idx + 1}`}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Brand</p>
@@ -54,11 +84,18 @@ export default function ViewGearItem({
               <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Stock</p>
               <p className="text-sm text-zinc-900 dark:text-zinc-100 mt-0.5">{item?.stock}</p>
             </div>
-            <div className="col-span-2">
+            <div>
+              <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Featured Item</p>
+              <p className="text-sm text-zinc-900 dark:text-zinc-100 mt-0.5">
+                {item?.isFeature ? 'Yes' : 'No'}
+              </p>
+            </div>
+            <div>
               <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Location</p>
               <p className="text-sm text-zinc-900 dark:text-zinc-100 mt-0.5">{item?.location || '—'}</p>
             </div>
           </div>
+
           <div>
             <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Description</p>
             <p className="text-sm text-zinc-900 dark:text-zinc-100 mt-0.5 leading-relaxed">

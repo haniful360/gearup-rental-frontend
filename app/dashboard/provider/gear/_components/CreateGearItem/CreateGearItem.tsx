@@ -30,6 +30,8 @@ const defaultValues: GearFormData = {
   location: '',
   brand: '',
   stock: 0,
+  isFeature: false,
+  images: [],
   categoryId: '',
 };
 
@@ -45,7 +47,7 @@ export default function CreateGearItem({
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<GearFormData>({
+  } = useForm({
     resolver: zodResolver(gearItemSchema),
     defaultValues,
   });
@@ -67,6 +69,8 @@ export default function CreateGearItem({
         location: data.location,
         brand: data.brand,
         stock: data.stock,
+        isFeature: data.isFeature,
+        images: data.images,
         categoryId: data.categoryId,
       });
       onOpenChange(false);
