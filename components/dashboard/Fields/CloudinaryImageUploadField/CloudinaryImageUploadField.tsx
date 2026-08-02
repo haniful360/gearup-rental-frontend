@@ -101,15 +101,15 @@ export default function CloudinaryImageUploadField<T extends FieldValues>({
 
   return (
     <div className="space-y-3">
-      <Label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+      <Label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
         {label} {required && <span className="text-rose-500">*</span>}
       </Label>
 
       {/* Cloudinary File Upload Dropzone / Button */}
-      <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/30 p-4 transition-all hover:border-emerald-500/50">
+      <div className="rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-slate-50/70 dark:bg-[#0F172A] p-4 transition-all hover:border-emerald-500/50">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
               {isUploading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
@@ -117,16 +117,16 @@ export default function CloudinaryImageUploadField<T extends FieldValues>({
               )}
             </div>
             <div>
-              <p className="text-xs font-medium text-zinc-900 dark:text-zinc-100">
+              <p className="text-xs font-medium text-slate-900 dark:text-slate-100">
                 Upload to Cloudinary or add Image URL
               </p>
-              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 Upload images directly or paste Cloudinary image link below
               </p>
             </div>
           </div>
 
-          <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-sm shrink-0">
+          <label className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-medium rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-sm shrink-0">
             <Upload className="h-3.5 w-3.5" />
             {isUploading ? "Uploading..." : "Choose Files"}
             <input
@@ -141,7 +141,7 @@ export default function CloudinaryImageUploadField<T extends FieldValues>({
         </div>
 
         {/* URL Input Row */}
-        <div className="mt-3 flex items-center gap-2 pt-3 border-t border-zinc-200 dark:border-zinc-800">
+        <div className="mt-3 flex items-center gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
           <Input
             type="url"
             placeholder="Or paste Cloudinary image URL (https://res.cloudinary.com/...)"
@@ -153,14 +153,14 @@ export default function CloudinaryImageUploadField<T extends FieldValues>({
                 handleAddUrl();
               }
             }}
-            className="h-9 text-xs bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
+            className="h-9 text-xs bg-white dark:bg-[#0E1726] border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl"
           />
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={handleAddUrl}
-            className="h-9 px-3 text-xs shrink-0"
+            className="h-9 px-3 text-xs shrink-0 rounded-xl border-slate-200 dark:border-slate-800"
           >
             <Plus className="h-3.5 w-3.5 mr-1" /> Add
           </Button>
@@ -173,7 +173,7 @@ export default function CloudinaryImageUploadField<T extends FieldValues>({
           {imagesList.map((imgUrl, idx) => (
             <div
               key={idx}
-              className="group relative aspect-square rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-900 overflow-hidden shadow-xs"
+              className="group relative aspect-square rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 overflow-hidden shadow-xs"
             >
               <Image
                 src={imgUrl}
@@ -194,7 +194,7 @@ export default function CloudinaryImageUploadField<T extends FieldValues>({
               </button>
 
               {idx === 0 && (
-                <span className="absolute bottom-1 left-1 bg-black/60 backdrop-blur-xs text-[10px] text-white px-1.5 py-0.5 rounded-sm">
+                <span className="absolute bottom-1 left-1 bg-black/60 backdrop-blur-xs text-[10px] text-white px-1.5 py-0.5 rounded-md font-semibold">
                   Primary
                 </span>
               )}
@@ -202,8 +202,8 @@ export default function CloudinaryImageUploadField<T extends FieldValues>({
           ))}
         </div>
       ) : (
-        <div className="flex items-center gap-2 p-2.5 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 text-xs text-zinc-500 border border-dashed border-zinc-200 dark:border-zinc-800">
-          <ImageIcon className="h-4 w-4 text-zinc-400" />
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 dark:bg-[#0F172A] text-xs text-slate-400 border border-dashed border-slate-200 dark:border-slate-800">
+          <ImageIcon className="h-4 w-4 text-slate-400" />
           <span>No images uploaded yet</span>
         </div>
       )}

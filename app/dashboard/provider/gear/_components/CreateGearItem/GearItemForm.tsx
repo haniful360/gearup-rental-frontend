@@ -116,7 +116,7 @@ export function GearItemForm({ control, errors, categories }: GearItemFormProps)
         error={errors.images}
       />
 
-      <div className="flex items-center space-x-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/40 p-3.5">
+      <div className="flex items-center space-x-3 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-[#0F172A] p-3.5">
         <Controller
           name="isFeature"
           control={control}
@@ -131,11 +131,11 @@ export function GearItemForm({ control, errors, categories }: GearItemFormProps)
         <div className="grid gap-1 leading-none">
           <Label
             htmlFor="isFeature"
-            className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 cursor-pointer"
+            className="text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
           >
             Feature this Gear Item
           </Label>
-          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
             Featured items are highlighted on the home page and top of search results.
           </p>
         </div>

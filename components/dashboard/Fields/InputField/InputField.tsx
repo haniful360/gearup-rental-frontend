@@ -49,7 +49,7 @@ const InputField = <T extends FieldValues>({
   return (
     <div className="space-y-1.5">
       {!hideLabel && (
-        <Label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+        <Label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
           {label} {required && <span className="text-rose-500">*</span>}
         </Label>
       )}
@@ -73,13 +73,13 @@ const InputField = <T extends FieldValues>({
           }}
           onClick={() => !readOnly && isDate && inputRef.current?.showPicker()}
           className={cn(
-            "h-11 w-full rounded-lg px-3.5 text-sm transition-all duration-200",
-            "placeholder:text-zinc-400 dark:placeholder:text-zinc-500",
-            "bg-zinc-50 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800",
-            "text-zinc-900 dark:text-zinc-100",
+            "h-11 w-full rounded-xl px-3.5 text-sm transition-all duration-200",
+            "placeholder:text-slate-400 dark:placeholder:text-slate-500",
+            "bg-slate-50 dark:bg-[#0F172A] border-slate-200 dark:border-slate-800/80",
+            "text-slate-900 dark:text-slate-100",
             "focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/20 focus-visible:ring-offset-0",
             {
-              "cursor-not-allowed bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 opacity-70":
+              "cursor-not-allowed bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 opacity-70":
                 readOnly,
               "border-rose-500 focus-visible:border-rose-500 focus-visible:ring-rose-500/20":
                 error,
@@ -94,7 +94,7 @@ const InputField = <T extends FieldValues>({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors focus:outline-none"
+            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors focus:outline-none"
             tabIndex={-1}
           >
             {showPassword ? (
