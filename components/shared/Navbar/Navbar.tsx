@@ -244,7 +244,7 @@ export function Navbar({ user }: NavbarProps) {
               control={searchControl}
               type="search"
               placeholder="Search kayaks, tents, bikes, climbing gear..."
-              className="pl-9 h-9 bg-muted border-border focus-visible:ring-emerald-500 rounded-full"
+              className="pl-9 h-10 bg-muted border-border focus-visible:ring-emerald-500 rounded-full"
               leftIcon={<Search className="h-4 w-4 text-muted-foreground" />}
             />
             {suggestionsOpen && (
@@ -375,12 +375,12 @@ export function Navbar({ user }: NavbarProps) {
                 label="Log in"
                 href="/login"
                 variant="outline"
-                className="h-9 px-4 text-sm"
+                className="sm:h-10 px-4 text-sm"
               />
               <DynamicActionButton
                 label="Get Started"
                 href="/register"
-                className="h-9 px-4 text-sm"
+                className="sm:h-10 py-2 px-4 text-sm"
               />
             </div>
           )}
@@ -409,7 +409,7 @@ export function Navbar({ user }: NavbarProps) {
                       control={searchControl}
                       type="search"
                       placeholder="Search gear..."
-                      className="pl-9 h-9 bg-muted border-border focus-visible:ring-emerald-500 rounded-full"
+                      className="pl-9 h-12 bg-muted border-border focus-visible:ring-emerald-500 rounded-full"
                       leftIcon={<Search className="h-4 w-4 text-muted-foreground" />}
                     />
                   </form>

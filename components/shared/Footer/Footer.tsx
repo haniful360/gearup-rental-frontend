@@ -76,10 +76,10 @@ export function Footer() {
               <span className="text-xs font-semibold uppercase tracking-wider text-zinc-200">
                 Get Gear Recommendations
               </span>
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-3">
                 <Input
                   placeholder="Enter your email"
-                  className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-500 focus-visible:ring-emerald-500"
+                  className="sm:h-12 bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-500 focus-visible:ring-emerald-500"
                 />
                 <DynamicActionButton label="Subscribe" className="shrink-0" />
               </div>
