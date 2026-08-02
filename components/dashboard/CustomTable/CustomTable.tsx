@@ -2,26 +2,32 @@ import { ITableProps } from '@/types/custom-table.types';
 
 const CustomTable = <T extends object>({ columns, data }: ITableProps<T>) => {
   return (
-    <div className="custom-scrollbar overflow-x-auto border-t">
-      <table className="min-w-full divide-y">
-        <thead className="bg-white dark:bg-[#071120]">
+    <div className="custom-scrollbar overflow-x-auto border-t border-border/60">
+      <table className="min-w-full divide-y divide-border/60">
+        <thead className="bg-slate-50/80 dark:bg-[#0E1726]">
           <tr>
             {columns?.map((column, index) => (
               <th
                 key={index}
                 scope="col"
-                className="px-6 py-4 text-left text-sm font-semibold tracking-wider text-nowrap text-zinc-900 dark:text-[#334155]"
+                className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-nowrap text-slate-700 dark:text-slate-300"
               >
                 {column?.header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y">
+        <tbody className="divide-y divide-border/50 bg-card">
           {data?.map((row, rowIndex) => (
-            <tr key={rowIndex}>
+            <tr
+              key={rowIndex}
+              className="hover:bg-slate-100/50 dark:hover:bg-slate-800/40 transition-colors"
+            >
               {columns?.map((column, colIndex) => (
-                <td key={colIndex} className="px-6 py-4 text-sm whitespace-nowrap text-[#94A3B8] dark:text-[#334155]">
+                <td
+                  key={colIndex}
+                  className="px-6 py-4 text-sm whitespace-nowrap text-slate-800 dark:text-slate-200"
+                >
                   {'accessor' in column && column?.accessor
                     ? String(row[column?.accessor] ?? '')
                     : column?.cell?.(row, rowIndex)}
