@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -14,7 +13,7 @@ import {
 } from "lucide-react";
 import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
 import { Badge } from "@/components/ui/badge";
-import { getGearImage } from "@/lib/gear-images";
+import { getGearImagesList } from "@/lib/gear-images";
 import { getGearItemById } from "@/service/gear-items/getById";
 import { getAllGearItems } from "@/service/gear-items/getAll";
 import { getAllCategories } from "@/service/category/getAll";
@@ -23,6 +22,7 @@ import { getReviewsByGearItem } from "@/service/review/getByGearItem";
 import GearCard from "../_components/GearCard/GearCard";
 import BookingFlow from "./_components/BookingFlow/BookingFlow";
 import ReviewsSection from "./_components/ReviewsSection/ReviewsSection";
+import GearDetailsGallerySlider from "./_components/GearDetailsGallerySlider/GearDetailsGallerySlider";
 import type { GearItem } from "../page";
 import type { Review } from "@/types/review.types";
 
@@ -36,6 +36,10 @@ interface RawGearItem {
   stock?: number;
   categoryId?: string;
   categoryName?: string;
+  images?: string[];
+  image?: string;
+  imageUrl?: string;
+  isFeature?: boolean;
 }
 
 export default async function GearDetailsPage({
@@ -80,6 +84,18 @@ export default async function GearDetailsPage({
 
   const categories: { id: string; name: string }[] = categoriesResult?.data || [];
 
+  const categoryName =
+    rawGear.categoryName ||
+    categories.find((c) => c.id === rawGear.categoryId)?.name;
+
+  const rawImages = Array.isArray(rawGear.images) && rawGear.images.length > 0
+    ? rawGear.images
+    : typeof rawGear.image === "string" && rawGear.image
+    ? [rawGear.image]
+    : typeof rawGear.imageUrl === "string" && rawGear.imageUrl
+    ? [rawGear.imageUrl]
+    : [];
+
   const gear: GearItem = {
     id: rawGear.id,
     title: rawGear.title ?? "Untitled Gear",
@@ -89,25 +105,38 @@ export default async function GearDetailsPage({
     brand: rawGear.brand ?? "",
     stock: Number(rawGear.stock ?? 0),
     categoryId: rawGear.categoryId,
-    categoryName:
-      rawGear.categoryName ||
-      categories.find((c) => c.id === rawGear.categoryId)?.name,
+    categoryName,
+    images: getGearImagesList(categoryName, rawImages, 0),
+    isFeature: !!rawGear.isFeature,
   };
 
   const relatedItems = ((allGearsResult?.data as RawGearItem[] | undefined) || [])
-    .map((raw) => ({
-      id: raw?.id ?? "",
-      title: raw?.title ?? "Untitled Gear",
-      description: raw?.description ?? "",
-      pricePerDay: Number(raw?.pricePerDay ?? 0),
-      location: raw?.location ?? "",
-      brand: raw?.brand ?? "",
-      stock: Number(raw?.stock ?? 0),
-      categoryId: raw?.categoryId,
-      categoryName:
+    .map((raw, idx) => {
+      const catName =
         raw?.categoryName ||
-        categories.find((c) => c.id === raw?.categoryId)?.name,
-    }))
+        categories.find((c) => c.id === raw?.categoryId)?.name;
+      const itemRawImages = Array.isArray(raw?.images) && raw.images.length > 0
+        ? raw.images
+        : typeof raw?.image === "string" && raw.image
+        ? [raw.image]
+        : typeof raw?.imageUrl === "string" && raw.imageUrl
+        ? [raw.imageUrl]
+        : [];
+
+      return {
+        id: raw?.id ?? "",
+        title: raw?.title ?? "Untitled Gear",
+        description: raw?.description ?? "",
+        pricePerDay: Number(raw?.pricePerDay ?? 0),
+        location: raw?.location ?? "",
+        brand: raw?.brand ?? "",
+        stock: Number(raw?.stock ?? 0),
+        categoryId: raw?.categoryId,
+        categoryName: catName,
+        images: getGearImagesList(catName, itemRawImages, idx),
+        isFeature: !!raw?.isFeature,
+      };
+    })
     .filter((item) => item.id !== gear.id);
 
   const sameCategory = relatedItems.filter(
@@ -135,23 +164,11 @@ export default async function GearDetailsPage({
       </Link>
 
       <div className="grid gap-10 lg:grid-cols-2">
-        <div className="relative overflow-hidden rounded-2xl border bg-card">
-          <div className="relative aspect-[4/3]">
-            <Image
-              src={getGearImage(gear.categoryName, 0)}
-              alt={gear.title}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
-          {gear.categoryName && (
-            <Badge className="absolute left-4 top-4 bg-black/50 text-white backdrop-blur-sm border-white/20">
-              {gear.categoryName}
-            </Badge>
-          )}
-        </div>
+        <GearDetailsGallerySlider
+          images={gear.images || []}
+          title={gear.title}
+          categoryName={gear.categoryName}
+        />
 
         <div className="flex flex-col gap-6">
           <div className="space-y-3">

@@ -1,6 +1,7 @@
 import { getAllGearItems } from "@/service/gear-items/getAll";
 import { getAllCategories } from "@/service/category/getAll";
 import ExploreGearClient from "./_components/ExploreGearClient/ExploreGearClient";
+import { getGearImagesList } from "@/lib/gear-images";
 
 export type GearItem = {
   id: string;
@@ -12,6 +13,8 @@ export type GearItem = {
   stock: number;
   categoryId?: string;
   categoryName?: string;
+  images?: string[];
+  isFeature?: boolean;
 };
 
 interface RawGearItem {
@@ -24,6 +27,10 @@ interface RawGearItem {
   stock?: number;
   categoryId?: string;
   categoryName?: string;
+  images?: string[];
+  image?: string;
+  imageUrl?: string;
+  isFeature?: boolean;
 }
 
 interface Category {
@@ -43,17 +50,31 @@ export default async function ExploreGearPage({
   ]);
 
   const categories: Category[] = categoriesResult?.data || [];
-  const gears: GearItem[] = (gearsResult?.data || []).map((raw: RawGearItem) => ({
-    id: raw?.id ?? "",
-    title: raw?.title ?? "Untitled Gear",
-    description: raw?.description ?? "",
-    pricePerDay: Number(raw?.pricePerDay ?? 0),
-    location: raw?.location ?? "",
-    brand: raw?.brand ?? "",
-    stock: Number(raw?.stock ?? 0),
-    categoryId: raw?.categoryId,
-    categoryName: raw?.categoryName || categories.find((c) => c.id === raw?.categoryId)?.name,
-  }));
+  const gears: GearItem[] = (gearsResult?.data || []).map((raw: RawGearItem, index: number) => {
+    const categoryName =
+      raw?.categoryName || categories.find((c) => c.id === raw?.categoryId)?.name;
+    const rawImages = Array.isArray(raw?.images) && raw.images.length > 0
+      ? raw.images
+      : typeof raw?.image === "string" && raw.image
+      ? [raw.image]
+      : typeof raw?.imageUrl === "string" && raw.imageUrl
+      ? [raw.imageUrl]
+      : [];
+
+    return {
+      id: raw?.id ?? "",
+      title: raw?.title ?? "Untitled Gear",
+      description: raw?.description ?? "",
+      pricePerDay: Number(raw?.pricePerDay ?? 0),
+      location: raw?.location ?? "",
+      brand: raw?.brand ?? "",
+      stock: Number(raw?.stock ?? 0),
+      categoryId: raw?.categoryId,
+      categoryName,
+      images: getGearImagesList(categoryName, rawImages, index),
+      isFeature: !!raw?.isFeature,
+    };
+  });
 
   return (
     <ExploreGearClient

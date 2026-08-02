@@ -1,45 +1,48 @@
-import DynamicActionButton from "@/components/dashboard/DynamicActionButton/DynamicActionButton";
-import { TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { TrendingUp, ArrowRight } from "lucide-react";
+import GearCard from "@/app/(main)/gear/_components/GearCard/GearCard";
+import type { GearItem } from "@/app/(main)/gear/page";
 
-const gearItems = [
-  { name: "Premium Kayak Pro", price: 45, period: "day", image: "🚣" },
-  { name: "4-Season Camping Tent", price: 30, period: "day", image: "⛺" },
-  { name: "Mountain Bike XTR", price: 55, period: "day", image: "🚵" },
-  { name: "Snowboard Set Elite", price: 40, period: "day", image: "🏂" },
-];
+interface FeaturedGearProps {
+  gears?: GearItem[];
+}
 
-export function FeaturedGear() {
+export function FeaturedGear({ gears = [] }: FeaturedGearProps) {
   return (
     <section className="container mx-auto px-4 py-20 md:py-28">
-      <div className="text-center space-y-3 mb-14">
-        <span className="inline-block rounded-full bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-500 border border-amber-500/20">
-          <TrendingUp className="inline h-3 w-3 mr-1" /> Trending Now
-        </span>
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Featured Gear</h2>
-        <p className="text-muted-foreground max-w-xl mx-auto">Top-rated equipment available for rent right now.</p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+        <div className="space-y-3">
+          <span className="inline-flex items-center rounded-full bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-500 border border-amber-500/20">
+            <TrendingUp className="inline h-3.5 w-3.5 mr-1.5" /> Trending Now
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            Featured Gear
+          </h2>
+          <p className="text-muted-foreground max-w-xl">
+            Top-rated & featured outdoor equipment ready for instant rental from verified local providers.
+          </p>
+        </div>
+
+        <Link
+          href="/gear"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors group self-start md:self-auto"
+        >
+          View all equipment
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </Link>
       </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {gearItems.map((item) => (
-          <div key={item.name} className="group rounded-2xl border bg-card overflow-hidden shadow-sm hover:shadow-lg transition-all">
-            <div className="flex h-40 items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 text-6xl group-hover:scale-110 transition-transform duration-500">
-              {item.image}
-            </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-sm">{item.name}</h3>
-              <div className="flex items-center justify-between mt-3">
-                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
-                  ${item.price}<span className="text-xs font-normal text-muted-foreground">/{item.period}</span>
-                </p>
-                <DynamicActionButton
-                  label="Rent Now"
-                  variant="outline"
-                  className="h-9 text-xs"
-                />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+
+      {gears.length > 0 ? (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {gears.map((item, index) => (
+            <GearCard key={item.id} gear={item} index={index} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed p-12 text-center text-muted-foreground">
+          <p>No featured gear currently available.</p>
+        </div>
+      )}
     </section>
   );
 }
