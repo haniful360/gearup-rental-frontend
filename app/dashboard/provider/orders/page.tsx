@@ -22,7 +22,15 @@ export interface ProviderOrder {
 
 export default async function ProviderOrdersPage() {
   const result = await getProviderOrders({ limit: 100 });
-  const orders: ProviderOrder[] = result?.data || [];
+
+  const rawData = result?.data;
+  const orders: ProviderOrder[] = Array.isArray(rawData?.data)
+    ? rawData.data
+    : Array.isArray(rawData)
+    ? rawData
+    : Array.isArray(result)
+    ? result
+    : [];
 
   return <ProviderOrdersTable initialOrders={orders} />;
 }

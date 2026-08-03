@@ -48,7 +48,15 @@ function statusColor(status?: string) {
 
 export default async function CustomerOrdersPage() {
   const result = await getAllRentalOrders({ limit: 100 });
-  const orders: RentalOrder[] = result?.data || [];
+
+  const rawData = result?.data;
+  const orders: RentalOrder[] = Array.isArray(rawData?.data)
+    ? rawData.data
+    : Array.isArray(rawData)
+    ? rawData
+    : Array.isArray(result)
+    ? result
+    : [];
 
   const columns: TColumn<RentalOrder>[] = [
     {

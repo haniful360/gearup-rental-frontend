@@ -102,17 +102,17 @@ export default function ProviderOrdersTable({
         </div>
       ),
     },
-    {
-      header: "Gear",
-      cell: (row) => (
-        <div>
-          <p className="font-medium">{row.gearItem?.title || "—"}</p>
-          <p className="text-xs text-muted-foreground">
-            {row.gearItem?.location || ""}
-          </p>
-        </div>
-      ),
-    },
+    // {
+    //   header: "Gear",
+    //   cell: (row) => (
+    //     <div>
+    //       <p className="font-medium">{row.gearItem?.title || "—"}</p>
+    //       <p className="text-xs text-muted-foreground">
+    //         {row.gearItem?.location || ""}
+    //       </p>
+    //     </div>
+    //   ),
+    // },
     {
       header: "Rental Period",
       cell: (row) => (

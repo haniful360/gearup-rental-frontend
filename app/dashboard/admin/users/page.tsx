@@ -13,7 +13,16 @@ export type AdminUser = {
 
 export default async function UserManagementPage() {
   const result = await getAdminUsers();
-  const users: AdminUser[] = result?.data || [];
+
+  // Extract array of users safely whether response is paginated ({ meta, data: [...] }) or flat array
+  const rawData = result?.data;
+  const users: AdminUser[] = Array.isArray(rawData?.data)
+    ? rawData.data
+    : Array.isArray(rawData)
+    ? rawData
+    : Array.isArray(result)
+    ? result
+    : [];
 
   return <UsersManageTable initialUsers={users} />;
 }

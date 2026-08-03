@@ -32,7 +32,15 @@ function formatDate(value?: string) {
 
 export default async function GearModerationPage() {
   const result = await getAdminGear();
-  const gear: AdminGearItem[] = result?.data || [];
+
+  const rawData = result?.data;
+  const gear: AdminGearItem[] = Array.isArray(rawData?.data)
+    ? rawData.data
+    : Array.isArray(rawData)
+    ? rawData
+    : Array.isArray(result)
+    ? result
+    : [];
 
   const columns: TColumn<AdminGearItem>[] = [
     {

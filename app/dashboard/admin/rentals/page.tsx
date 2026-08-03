@@ -41,7 +41,15 @@ function statusColor(status?: string) {
 
 export default async function AllRentalsPage() {
   const result = await getAdminRentals();
-  const rentals: AdminRental[] = result?.data || [];
+
+  const rawData = result?.data;
+  const rentals: AdminRental[] = Array.isArray(rawData?.data)
+    ? rawData.data
+    : Array.isArray(rawData)
+    ? rawData
+    : Array.isArray(result)
+    ? result
+    : [];
 
   const columns: TColumn<AdminRental>[] = [
     {
