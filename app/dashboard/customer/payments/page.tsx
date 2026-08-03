@@ -29,11 +29,10 @@ function formatDate(value?: string) {
 
 function statusColor(status?: string) {
   const s = (status || "").toUpperCase();
-  if (s === "COMPLETED" || s === "SUCCESS" || s === "SUCCEEDED" || s === "PAID")
-    return "#10b981";
-  if (s === "PENDING" || s === "PROCESSING") return "#f59e0b";
-  if (s === "FAILED" || s === "CANCELLED" || s === "CANCELED")
-    return "#ef4444";
+  if (s === "PAID" || s === "COMPLETED" || s === "SUCCESS") return "#10b981";
+  if (s === "PENDING") return "#f59e0b";
+  if (s === "FAILED") return "#ef4444";
+  if (s === "REFUNDED") return "#6b7280";
   return "#94a3b8";
 }
 

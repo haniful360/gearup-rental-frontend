@@ -20,7 +20,9 @@ import { updateOrderStatus } from "@/service/provider-order/updateOrderStatus";
 import type { ProviderOrder } from "../../page";
 
 const STATUS_OPTIONS = [
+  "PLACED",
   "CONFIRMED",
+  "PAID",
   "PICKED_UP",
   "RETURNED",
   "CANCELLED",
@@ -29,12 +31,12 @@ const STATUS_OPTIONS = [
 
 const STATUS_COLORS: Record<string, string> = {
   PLACED: "#f59e0b",
-  CONFIRMED: "#10b981",
-  PAID: "#06b6d4",
-  PICKED_UP: "#3b82f6",
-  RETURNED: "#8b5cf6",
+  CONFIRMED: "#3b82f6",
+  PAID: "#10b981",
+  PICKED_UP: "#6366f1",
+  RETURNED: "#06b6d4",
   CANCELLED: "#ef4444",
-  REJECTED: "#ef4444",
+  REJECTED: "#f43f5e",
 };
 
 function formatStatus(status?: string) {

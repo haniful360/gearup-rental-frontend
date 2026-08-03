@@ -154,6 +154,7 @@ export interface ICustomerOverviewData {
 export interface ICustomerRecentOrder {
   id: string;
   status?: string;
+  paymentStatus?: string;
   totalPrice?: number;
   createdAt?: string;
   startDate?: string;

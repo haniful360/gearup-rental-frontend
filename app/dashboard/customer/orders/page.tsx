@@ -3,6 +3,7 @@ import { getAllRentalOrders } from "@/service/rental-order/getAll";
 import CustomTable from "@/components/dashboard/CustomTable/CustomTable";
 import DynamicPageHeader from "@/components/dashboard/DynamicPageHeader/DynamicPageHeader";
 import DynamicBadge from "@/components/dashboard/DynamicBadge/DynamicBadge";
+import PayNowButton from "@/components/dashboard/PayNowButton/PayNowButton";
 import type { TColumn } from "@/types/custom-table.types";
 
 interface RentalOrder {
@@ -35,15 +36,74 @@ function formatDate(value?: string) {
   });
 }
 
-function statusColor(status?: string) {
+function formatOrderStatus(status?: string) {
   const s = (status || "").toUpperCase();
-  if (s === "PLACED" || s === "PENDING" || s === "REQUESTED") return "#f59e0b";
-  if (s === "CONFIRMED" || s === "COMPLETED" || s === "APPROVED")
-    return "#10b981";
-  if (s === "ACTIVE" || s === "ONGOING") return "#3b82f6";
-  if (s === "CANCELLED" || s === "CANCELED" || s === "REJECTED" || s === "FAILED")
-    return "#ef4444";
-  return "#94a3b8";
+  if (s === "CANCELED") return "CANCELLED";
+  return s || "PLACED";
+}
+
+function orderStatusColor(status?: string) {
+  const s = formatOrderStatus(status);
+  switch (s) {
+    case "PLACED":
+      return "#f59e0b";
+    case "CONFIRMED":
+      return "#3b82f6";
+    case "PAID":
+      return "#10b981";
+    case "PICKED_UP":
+      return "#6366f1";
+    case "RETURNED":
+      return "#06b6d4";
+    case "CANCELLED":
+      return "#ef4444";
+    case "REJECTED":
+      return "#f43f5e";
+    default:
+      return "#94a3b8";
+  }
+}
+
+function formatPaymentStatus(paymentStatus?: string, orderStatus?: string) {
+  const p = (paymentStatus || "").toUpperCase();
+  const o = (orderStatus || "").toUpperCase();
+
+  if (p === "PAID") return "PAID";
+  if (p === "FAILED" || p === "CANCELLED" || p === "CANCELED" || o === "CANCELLED" || o === "REJECTED") {
+    return "FAILED";
+  }
+  if (p === "REFUNDED") return "REFUNDED";
+  return p || "PENDING";
+}
+
+function paymentStatusColor(paymentStatus?: string, orderStatus?: string) {
+  const formatted = formatPaymentStatus(paymentStatus, orderStatus);
+  switch (formatted) {
+    case "PAID":
+      return "#10b981";
+    case "FAILED":
+      return "#ef4444";
+    case "PENDING":
+      return "#f59e0b";
+    case "REFUNDED":
+      return "#6b7280";
+    default:
+      return "#94a3b8";
+  }
+}
+
+function canPayNow(row: RentalOrder) {
+  const pStatus = (row.paymentStatus || "").toUpperCase();
+  const status = (row.status || "").toUpperCase();
+
+  if (pStatus === "PAID" || status === "PAID" || pStatus === "REFUNDED") {
+    return false;
+  }
+
+  return (
+    ["PLACED", "CANCELLED", "CONFIRMED"].includes(status) ||
+    ["PENDING", "FAILED", ""].includes(pStatus)
+  );
 }
 
 export default async function CustomerOrdersPage() {
@@ -94,17 +154,29 @@ export default async function CustomerOrdersPage() {
     {
       header: "Status",
       cell: (row) => (
-        <DynamicBadge text={row.status || "—"} color={statusColor(row.status)} />
+        <DynamicBadge
+          text={formatOrderStatus(row.status)}
+          color={orderStatusColor(row.status)}
+        />
       ),
     },
     {
       header: "Payment",
       cell: (row) => (
         <DynamicBadge
-          text={row.paymentStatus || "—"}
-          color={statusColor(row.paymentStatus)}
+          text={formatPaymentStatus(row.paymentStatus, row.status)}
+          color={paymentStatusColor(row.paymentStatus, row.status)}
         />
       ),
+    },
+    {
+      header: "Action",
+      cell: (row) =>
+        canPayNow(row) && row.id ? (
+          <PayNowButton orderId={row.id} size="sm" />
+        ) : (
+          <span className="text-xs text-muted-foreground">—</span>
+        ),
     },
   ];
 

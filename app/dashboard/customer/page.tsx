@@ -9,6 +9,7 @@ import {
 import DynamicPageHeader from "@/components/dashboard/DynamicPageHeader/DynamicPageHeader";
 import StatsGrid from "@/components/dashboard/DynamicStatCard/StatsGrid";
 import DynamicBadge from "@/components/dashboard/DynamicBadge/DynamicBadge";
+import PayNowButton from "@/components/dashboard/PayNowButton/PayNowButton";
 import {
   getCustomerOverview,
   getCustomerRecentOrders,
@@ -30,23 +31,37 @@ function formatDate(value?: string) {
   });
 }
 
+function canPayNow(row: ICustomerRecentOrder) {
+  const pStatus = (row.paymentStatus || "").toUpperCase();
+  const status = (row.status || "").toUpperCase();
+
+  if (pStatus === "PAID" || status === "PAID" || pStatus === "REFUNDED") {
+    return false;
+  }
+
+  return (
+    ["PLACED", "CANCELLED", "CONFIRMED"].includes(status) ||
+    ["PENDING", "FAILED", ""].includes(pStatus)
+  );
+}
+
 function getOrderStatusBadge(status?: string) {
-  const s = (status || "PENDING").toUpperCase();
+  const s = (status || "PLACED").toUpperCase();
   switch (s) {
-    case "COMPLETED":
-    case "APPROVED":
-    case "CONFIRMED":
-      return <DynamicBadge text={s} color="#10b981" size="xs" />;
-    case "ACTIVE":
-    case "ONGOING":
-    case "IN_PROGRESS":
-      return <DynamicBadge text={s} color="#3b82f6" size="xs" />;
-    case "PENDING":
     case "PLACED":
-      return <DynamicBadge text={s} color="#f59e0b" size="xs" />;
+      return <DynamicBadge text="PLACED" color="#f59e0b" size="xs" />;
+    case "CONFIRMED":
+      return <DynamicBadge text="CONFIRMED" color="#3b82f6" size="xs" />;
+    case "PAID":
+      return <DynamicBadge text="PAID" color="#10b981" size="xs" />;
+    case "PICKED_UP":
+      return <DynamicBadge text="PICKED UP" color="#6366f1" size="xs" />;
+    case "RETURNED":
+      return <DynamicBadge text="RETURNED" color="#06b6d4" size="xs" />;
     case "CANCELLED":
+      return <DynamicBadge text="CANCELLED" color="#ef4444" size="xs" />;
     case "REJECTED":
-      return <DynamicBadge text={s} color="#ef4444" size="xs" />;
+      return <DynamicBadge text="REJECTED" color="#f43f5e" size="xs" />;
     default:
       return <DynamicBadge text={s} color="#6b7280" size="xs" />;
   }
@@ -182,6 +197,9 @@ export default async function CustomerOverviewPage() {
                       <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                         ${(order.totalPrice ?? 0).toFixed(2)}
                       </span>
+                      {canPayNow(order) && order.id && (
+                        <PayNowButton orderId={order.id} size="sm" />
+                      )}
                     </div>
                   </div>
                 );
