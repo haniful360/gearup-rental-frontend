@@ -193,7 +193,7 @@ function LoginForm() {
             our mountain trip.&rdquo;
           </blockquote>
           <p className="text-sm text-zinc-300">
-            — Sarah Jenkins, Outdoor Enthusiast
+            — Haniful Islam, Outdoor Enthusiast
           </p>
         </div>
       </div>
