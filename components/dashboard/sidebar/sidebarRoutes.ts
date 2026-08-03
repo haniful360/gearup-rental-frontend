@@ -3,13 +3,11 @@ import {
   ShoppingBag,
   Star,
   Package,
-  PlusCircle,
   ClipboardList,
   Users,
   ShieldCheck,
   CreditCard,
   Settings,
-  Compass,
   FolderTree,
 } from "lucide-react";
 
