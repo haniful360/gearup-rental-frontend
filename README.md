@@ -48,9 +48,12 @@ npm install
 ```
 
 ### 2. Configure Environment Variables
-Create a `.env.local` file in the root directory:
+Copy `.env.example` to `.env.local` or `.env`:
+```bash
+cp .env.example .env.local
+```
+Or create a `.env.local` file with:
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000
 BACKEND_API_URL=https://gearup-assignment-seven.vercel.app
 ```
 
