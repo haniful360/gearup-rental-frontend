@@ -1,11 +1,8 @@
-import Link from "next/link";
 import { getAdminGear } from "@/service/admin/getGear";
-import CustomTable from "@/components/dashboard/CustomTable/CustomTable";
 import DynamicPageHeader from "@/components/dashboard/DynamicPageHeader/DynamicPageHeader";
-import DynamicBadge from "@/components/dashboard/DynamicBadge/DynamicBadge";
-import type { TColumn } from "@/types/custom-table.types";
+import GearModerationTable from "./_components/GearModerationTable/GearModerationTable";
 
-interface AdminGearItem {
+export interface AdminGearItem {
   id?: string;
   title?: string;
   description?: string;
@@ -14,24 +11,40 @@ interface AdminGearItem {
   brand?: string;
   stock?: number;
   isAvailable?: boolean;
+  isFeature?: boolean;
+  images?: string[];
+  image?: string;
+  imageUrl?: string;
   providerId?: string;
   categoryId?: string;
   createdAt?: string;
   category?: { id?: string; name?: string };
 }
 
-function formatDate(value?: string) {
-  if (!value) return "—";
-  const iso = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00` : value;
-  return new Date(iso).toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
+export type PaginationMeta = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
 
-export default async function GearModerationPage() {
-  const result = await getAdminGear();
+export default async function GearModerationPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
+  const resolvedParams = await searchParams;
+  const page = resolvedParams?.page ? Number(resolvedParams.page) : 1;
+  const limit = resolvedParams?.limit ? Number(resolvedParams.limit) : 10;
+  const searchTerm = resolvedParams?.searchTerm || resolvedParams?.search || "";
+  const category = resolvedParams?.category || "";
+
+  const result = await getAdminGear({
+    page,
+    limit,
+    searchTerm,
+    category,
+  });
 
   const rawData = result?.data;
   const gear: AdminGearItem[] = Array.isArray(rawData?.data)
@@ -42,54 +55,21 @@ export default async function GearModerationPage() {
     ? result
     : [];
 
-  const columns: TColumn<AdminGearItem>[] = [
-    {
-      header: "Gear",
-      cell: (row) => (
-        <div>
-          <p className="font-medium">{row.title?.slice(0, 40) || "—"}</p>
-          <p className="text-xs text-muted-foreground">
-            {row.description?.slice(0, 40) || "—"}
-          </p>
-        </div>
-      ),
-    },
-    {
-      header: "Category",
-      cell: (row) => <span>{row.category?.name || "—"}</span>,
-    },
-    {
-      header: "Provider",
-      cell: (row) => (
-        <span className="text-xs">#{row.providerId?.slice(0, 8) || "—"}</span>
-      ),
-    },
-    {
-      header: "Price/Day",
-      cell: (row) => (
-        <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-          ${(row.pricePerDay ?? 0).toFixed(2)}
-        </span>
-      ),
-    },
-    {
-      header: "Stock",
-      cell: (row) => <span>{row.stock ?? 0}</span>,
-    },
-    {
-      header: "Availability",
-      cell: (row) => (
-        <DynamicBadge
-          text={row.isAvailable ? "Available" : "Unavailable"}
-          color={row.isAvailable ? "#10b981" : "#ef4444"}
-        />
-      ),
-    },
-    {
-      header: "Listed",
-      cell: (row) => <span>{formatDate(row.createdAt)}</span>,
-    },
-  ];
+  const rawMeta = result?.meta || rawData?.meta;
+  const totalItems = typeof rawMeta?.total === "number" ? rawMeta.total : gear.length;
+  const currentLimit = typeof rawMeta?.limit === "number" ? rawMeta.limit : limit;
+  const currentPage = typeof rawMeta?.page === "number" ? rawMeta.page : page;
+  const computedTotalPages =
+    typeof rawMeta?.totalPages === "number"
+      ? rawMeta.totalPages
+      : Math.max(1, Math.ceil(totalItems / Math.max(1, currentLimit)));
+
+  const meta: PaginationMeta = {
+    total: totalItems,
+    page: currentPage,
+    limit: currentLimit,
+    totalPages: computedTotalPages,
+  };
 
   return (
     <div className="space-y-6">
@@ -98,20 +78,7 @@ export default async function GearModerationPage() {
         description="Review and moderate all gear listings on the platform"
       />
 
-      <div className="rounded-xl border bg-card shadow-sm">
-        <CustomTable columns={columns} data={gear} />
-        {gear.length === 0 && (
-          <div className="border-t px-6 py-12 text-center text-sm text-muted-foreground">
-            No gear items listed yet.{" "}
-            <Link
-              href="/dashboard/admin"
-              className="font-medium text-emerald-600 hover:underline"
-            >
-              Back to overview
-            </Link>
-          </div>
-        )}
-      </div>
+      <GearModerationTable initialGear={gear} meta={meta} />
     </div>
   );
 }

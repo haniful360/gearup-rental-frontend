@@ -32,11 +32,11 @@ export const customerRoutes = [
     url: "/dashboard/customer/payments",
     icon: CreditCard,
   },
-  {
-    title: "Explore Gear",
-    url: "/dashboard/customer/gears",
-    icon: Compass,
-  },
+  // {
+  //   title: "Explore Gear",
+  //   url: "/dashboard/customer/gears",
+  //   icon: Compass,
+  // },
   {
     title: "Reviews",
     url: "/dashboard/customer/reviews",
